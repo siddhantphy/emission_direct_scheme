@@ -5,6 +5,7 @@ from circuit_simulation.basic_operations.basic_operations import (
     CT, KP, get_value_by_prob, fidelity, fidelity_elementwise, trace, csr_matrix_equal
 )
 from circuit_simulation.ghz_states.direct_ghz_states import *
+from circuit_simulation.ghz_states.direct_emission_states import *
 from circuit_simulation.states.states import *
 from circuit_simulation.gates.gates import *
 from circuit_simulation.gates.gate import SingleQubitGate
@@ -304,6 +305,21 @@ class QuantumCircuit:
                     print(f"\n\nCalculated fidelity of {self.F_link} is not equal to the imported fidelity of {imported_fidelity}.")
             if self.dynamic_direct_states:
                 print(f"*** GHZ state fidelity is {self.F_link}.***")
+            print(f"*** Success probability is {self.p_link}.***")
+            return noisy_density_matrix
+
+        if network_noise_type in range(100, 105):
+            direct_emission_out = import_direct_emission_states(path=None, choice=network_noise_type, gate_error=self.p_g)
+            self.p_link = direct_emission_out[0]
+            noisy_density_matrix = direct_emission_out[1]
+            weight = 4
+            density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
+            density_matrix_target[0, 0] = 0.5
+            density_matrix_target[0, 2**weight-1] = 0.5
+            density_matrix_target[2**weight-1, 0] = 0.5
+            density_matrix_target[2**weight-1, 2**weight-1] = 0.5
+            self.F_link = fidelity(noisy_density_matrix, density_matrix_target)
+            print(f"*** GHZ state fidelity is {self.F_link}.***")
             print(f"*** Success probability is {self.p_link}.***")
             return noisy_density_matrix
 

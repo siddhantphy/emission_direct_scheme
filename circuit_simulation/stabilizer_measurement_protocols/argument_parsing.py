@@ -355,7 +355,7 @@ def compose_parser():
                              help="Specify the network noise type. ",
                              type=int,
                              choices=[0, 1, 2, 3] + [*range(10, 22)] + [*range(30, 33)] + [*range(40, 43)]
-                                     + [*range(50, 55)] + [*range(60, 65)] + [*range(70, 75)] + [*range(80, 85)] + [99])
+                                     + [*range(50, 55)] + [*range(60, 65)] + [*range(70, 75)] + [*range(80, 85)] + [99]+[*range(100,105)])
     circuit_arg.add_argument("-dynamic_states",
                              "--dynamic_direct_states",
                              help="Specify if you want to use direct states with varying gate error.",

@@ -15,7 +15,7 @@ def import_direct_emission_states(path: str, choice: int, gate_error: float):
         An integer indicating which density matrix file to import and process:
         - 100: Use "ghz_raw.csv"
         - 101: Use "ghz_basic.csv"
-        - 102: Use "ghz_refined.csv"
+        - 102: Use "ghz_medium.csv"
     gate_error : float
         A gate error parameter (currently unused in the function).
 
@@ -49,7 +49,7 @@ def import_direct_emission_states(path: str, choice: int, gate_error: float):
         density_matrix = IXIX @ np.loadtxt(path + "ghz_basic.csv", delimiter=',') @ IXIX
         prob_succ = 1.6921e-08 * 3.5908e-01
     elif choice == 102:
-        density_matrix = IXIX @ np.loadtxt(path + "ghz_refined.csv", delimiter=',') @ IXIX
+        density_matrix = IXIX @ np.loadtxt(path + "ghz_medium.csv", delimiter=',') @ IXIX
         prob_succ = 1.6921e-08 * 4.4794e-02
     else:
         raise ValueError("Invalid choice. Please select 100, 101, or 102.")

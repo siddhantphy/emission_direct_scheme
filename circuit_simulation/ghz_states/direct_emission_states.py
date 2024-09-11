@@ -1,8 +1,37 @@
 import numpy as np
 import os
 import scipy.sparse as sp
+from circuit_simulation.ghz_states.dynamic_direct_emission import generate_dynamic_direct_emission_state
 
-def import_direct_emission_states(path: str, choice: int, gate_error: float):
+def import_direct_emission_states(choice: int, dynamic_states: bool, path: str, p_g: float, p_m: float, eta: float, p_n: float, p_emi: float):
+    """
+    Import or generate direct emission states based on dynamic state selection.
+
+    Args:
+        choice (int): An identifier for the specific emission state to be used.
+        dynamic_states (bool): If True, generates the state dynamically. If False, imports the state from a file.
+        path (str): The file path to import states from, if `dynamic_states` is True.
+        p_g (float): Gate noise parameter.
+        p_m (float): Measurement noise parameter.
+        eta (float): Efficiency factor for photon loss.
+        p_n (float): Noise parameter for imperfect states.
+        p_emi (float): Photon emission rate.
+
+    Returns:
+        tuple: A tuple containing:
+            - prob_succ (float): The success probability of generating or importing the emission state.
+            - sparse_density_matrix: The sparse density matrix representing the emission state.
+    """
+    if dynamic_states:
+        prob_succ, sparse_density_matrix = generate_dynamic_direct_emission_state(choice, p_n, p_emi, eta, p_g, p_m)
+        return (prob_succ, sparse_density_matrix)
+    
+    if not dynamic_states:
+        prob_succ, sparse_density_matrix = import_direct_emission_states_from_file(path=path, choice=choice)
+        return (prob_succ, sparse_density_matrix)
+
+
+def import_direct_emission_states_from_file(path: str, choice: int):
     """
     Imports and applies the IXIX Pauli operator to a 4-qubit density matrix
     from a specified file based on the choice parameter, and converts the result to a sparse matrix.
@@ -16,8 +45,6 @@ def import_direct_emission_states(path: str, choice: int, gate_error: float):
         - 100: Use "ghz_raw.csv"
         - 101: Use "ghz_basic.csv"
         - 102: Use "ghz_medium.csv"
-    gate_error : float
-        A gate error parameter (currently unused in the function).
 
     Returns
     -------
@@ -58,4 +85,4 @@ def import_direct_emission_states(path: str, choice: int, gate_error: float):
     sparse_density_matrix = sp.csr_matrix(density_matrix)
     
     # Return the success probability and the sparse density matrix
-    return (prob_succ,sparse_density_matrix)
+    return prob_succ,sparse_density_matrix

@@ -309,7 +309,7 @@ class QuantumCircuit:
             return noisy_density_matrix
 
         if network_noise_type in range(100, 105):
-            direct_emission_out = import_direct_emission_states(path=None, choice=network_noise_type, gate_error=self.p_g)
+            direct_emission_out = import_direct_emission_states(choice=network_noise_type, dynamic_states=self.dynamic_direct_states, path=None, p_g=self.p_g, p_m=self.p_g, eta=0.4472, p_n=0.01, p_emi=0.04)
             self.p_link = direct_emission_out[0]
             noisy_density_matrix = direct_emission_out[1]
             weight = 4

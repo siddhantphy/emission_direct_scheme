@@ -1,6 +1,6 @@
 from qulacs import QuantumCircuit, QuantumState, DensityMatrix
 from qulacs.state import make_superposition, make_mixture, tensor_product, partial_trace
-from qulacs.gate import H, CNOT, CZ
+from qulacs.gate import H, CNOT, CZ, BitFlipNoise
 import numpy as np
 import scipy.linalg as LA
 from scipy import sparse as sp
@@ -58,15 +58,6 @@ class Protocol:
         self.rho_imperfect = create_rho_imperfect(p_n)
         self.rho_raw = create_rho_raw(self.rho_imperfect, p_emi, p_loss)
 
-        # Mapping of measurement ID to corresponding measurement function
-        self.id_to_measurement = {
-            0: self.measure0000,
-            1: self.measure1000,
-            2: self.measure1100,
-            3: self.measure1110,
-            4: self.measure1111
-        }
-
     def apply_raw_protocol(self):
         """
         Returns the raw quantum state after incorporating photon emission and loss.
@@ -80,55 +71,15 @@ class Protocol:
     
     def apply_basic_protocol(self):
         """
-        Applies the basic protocol by measuring different qubit states and combining the results 
-        with measurement noise taken into account.
-
-        Returns
-        -------
-        tuple
-            A tuple containing the success probability and the resulting quantum state.
-        """
-        p_m = self.p_m
-
-        # Perform the basic protocol with different measurement IDs
-        (basic_prob0, basic0) = self.apply_basic_protocol_(m_id=0)
-        (basic_prob1, basic1) = self.apply_basic_protocol_(m_id=1)
-        (basic_prob2, basic2) = self.apply_basic_protocol_(m_id=2)
-        (basic_prob3, basic3) = self.apply_basic_protocol_(m_id=3)
-        (basic_prob4, basic4) = self.apply_basic_protocol_(m_id=4)
-
-        # Compute the overall probability with measurement noise
-        basic_prob = p_m**4 * basic_prob0 \
-                    + 4 * p_m**3 * (1 - p_m) * basic_prob1 \
-                    + 6 * p_m**2 * (1 - p_m)**2 * basic_prob2 \
-                    + 4 * p_m * (1 - p_m)**3 * basic_prob3 \
-                    + (1 - p_m)**4 * basic_prob4
-
-        # Combine the resulting states into a mixture considering measurement noise
-        basic = \
-            make_mixture(1, make_mixture( \
-                    1, make_mixture(p_m**4, basic0, 4 * p_m**3 * (1 - p_m), basic1), \
-                    1, make_mixture(6 * p_m**2 * (1 - p_m)**2, basic2, 4 * p_m * (1 - p_m)**3, basic3)
-                ), \
-                (1 - p_m)**4, basic4)
-        
-        return (basic_prob, basic)
-
-    def apply_basic_protocol_(self, m_id):
-        """
-        Applies the basic protocol for a specific measurement ID by constructing a quantum circuit, 
+        Applies the basic protocol by constructing a quantum circuit, 
         applying gates with noise, and performing the corresponding measurement.
 
-        Parameters
-        ----------
-        m_id : int
-            The measurement ID to determine which qubit state to measure.
-
         Returns
         -------
         tuple
             A tuple containing the success probability and the resulting quantum state.
         """
+
         # Create a quantum circuit with 8 qubits
         circuit = QuantumCircuit(8)
 
@@ -138,8 +89,17 @@ class Protocol:
         circuit.add_noise_gate(CNOT(2, 6), "Depolarizing", self.p_g)
         circuit.add_noise_gate(CNOT(3, 7), "Depolarizing", self.p_g)
 
-        # Apply the corresponding measurement operation based on measurement ID
-        self.id_to_measurement[m_id](circuit)
+        # Add BitFlipNoise gates to ancillary qubits (4, 5, 6, 7)
+        circuit.add_gate(BitFlipNoise(4, self.p_m))
+        circuit.add_gate(BitFlipNoise(5, self.p_m))
+        circuit.add_gate(BitFlipNoise(6, self.p_m))
+        circuit.add_gate(BitFlipNoise(7, self.p_m))
+
+        # Measure all ancillary qubits (4, 5, 6, 7) by state |1>
+        circuit.add_P1_gate(4)
+        circuit.add_P1_gate(5)
+        circuit.add_P1_gate(6)
+        circuit.add_P1_gate(7)
 
         # Duplicate the raw state and apply the circuit
         rho_raw = self.rho_raw.copy()
@@ -183,7 +143,10 @@ class Protocol:
         circuit.add_noise_gate(H(7), "Depolarizing", self.p_g)
 
         # Apply the measurement corresponding to all qubits in state |1>
-        self.measure1111(circuit)
+        circuit.add_P1_gate(4)
+        circuit.add_P1_gate(5)
+        circuit.add_P1_gate(6)
+        circuit.add_P1_gate(7)
 
         # Apply the basic protocol and use the resulting state as input to the medium protocol
         (_, rho_basic) = self.apply_basic_protocol()
@@ -202,52 +165,6 @@ class Protocol:
         rho_medium_traced.normalize(rho_medium_traced.get_squared_norm())
 
         return (medium_prob, rho_medium_traced)
-    
-    # Measurement functions for specific qubit states
-    def measure1111(self, circuit):
-        """ 
-        Measures all ancillary qubits (4, 5, 6, 7) in state |1>. 
-        """
-        circuit.add_P1_gate(4)
-        circuit.add_P1_gate(5)
-        circuit.add_P1_gate(6)
-        circuit.add_P1_gate(7)
-    
-    def measure1110(self, circuit):
-        """ 
-        Measures ancillary qubits 4, 5, 6 in state |1> and qubit 7 in state |0>. 
-        """
-        circuit.add_P1_gate(4)
-        circuit.add_P1_gate(5)
-        circuit.add_P1_gate(6)
-        circuit.add_P0_gate(7)
-    
-    def measure1100(self, circuit):
-        """ 
-        Measures ancillary qubits 4, 5 in state |1> and qubits 6, 7 in state |0>. 
-        """
-        circuit.add_P1_gate(4)
-        circuit.add_P1_gate(5)
-        circuit.add_P0_gate(6)
-        circuit.add_P0_gate(7)
-    
-    def measure1000(self, circuit):
-        """ 
-        Measures ancillary qubit 4 in state |1> and qubits 5, 6, 7 in state |0>. 
-        """
-        circuit.add_P1_gate(4)
-        circuit.add_P0_gate(5)
-        circuit.add_P0_gate(6)
-        circuit.add_P0_gate(7)
-    
-    def measure0000(self, circuit):
-        """ 
-        Measures all ancillary qubits (4, 5, 6, 7) in state |0>. 
-        """
-        circuit.add_P0_gate(4)
-        circuit.add_P0_gate(5)
-        circuit.add_P0_gate(6)
-        circuit.add_P0_gate(7)
 
     def success_rate(self):
         """

@@ -3,7 +3,7 @@ import os
 import scipy.sparse as sp
 from circuit_simulation.ghz_states.dynamic_direct_emission import generate_dynamic_direct_emission_state
 
-def import_direct_emission_states(choice: int, dynamic_states: bool, path: str, p_g: float, p_m: float, eta: float, p_n: float, p_emi: float):
+def import_direct_emission_states(choice: int, dynamic_states: bool, path: str, p_g: float, p_m: float, eta: float, mu : float, alpha: float, F_prep: float):
     """
     Import or generate direct emission states based on dynamic state selection.
 
@@ -23,7 +23,7 @@ def import_direct_emission_states(choice: int, dynamic_states: bool, path: str, 
             - sparse_density_matrix: The sparse density matrix representing the emission state.
     """
     if dynamic_states:
-        prob_succ, sparse_density_matrix = generate_dynamic_direct_emission_state(choice, p_n, p_emi, eta, p_g, p_m)
+        prob_succ, sparse_density_matrix = generate_dynamic_direct_emission_state(choice, alpha, F_prep, mu, eta, p_g, p_m)
         return (prob_succ, sparse_density_matrix)
     
     if not dynamic_states:

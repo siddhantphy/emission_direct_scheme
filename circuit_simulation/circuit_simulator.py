@@ -311,49 +311,56 @@ class QuantumCircuit:
             mu = bell_pair_parameters['mu']
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
-            p_DE = bell_pair_parameters['p_DE']
+            p_EE = bell_pair_parameters['p_EE']
             eta = bell_pair_parameters['eta']
             
-            elems[0] = 12 * (-1 + alpha)**2 * (-1 + mu**2)
-            elems[1] = -12 * (1 - 2 * F_prep)**2 * (-1 + alpha)**2 * (-1 + mu) * mu
-            elems[2] = -24 * (1 - 2 * F_prep)**4 * (-1 + alpha)**2 * mu**2
-            elems[3] = -6 * (1 - 2 * F_prep)**2 * (-1 + alpha) * alpha * mu * (4 - 4 * mu + eta * (-1 + 2 * mu + mu**2))
-            elems[4] = 6 * (-1 + alpha) * alpha * (2 * (-3 + mu**2) + eta * (3 - 3 * mu**2 + 2 * mu**3))
-            elems[5] = alpha**2 * (-24 * (-3 + mu**2) - 24 * eta * (3 - 3 * mu**2 + 2 * mu**3) + eta**2 * (3 - 46 * mu**2 + 47 * mu**3))
-            elems = [elem / -24 * (-3 + mu**2) - 24 * alpha * eta * (3 - 3 * mu**2 + 2 * mu**3) + alpha**2 * eta**2 * (3 - 46 * mu**2 + 47 * mu**3) for elem in elems]
+            elems[0] = 12*(-1 + alpha)**2*(-1 + mu**2)
+            elems[1] = 24*(1 - 2*Fprep)**4 (1 - 2*pEE)**4 (-1 + alpha)**2*mu**2
+            elems[2] = 12*(1 - 2*Fprep)**2*(1 - 2*pEE)**2*(-1 + alpha)**2*(-1 + mu)*mu
+            elems[3] = 6*(1 - 2*F_prep)**2 * (-1 + alpha) * alpha * mu * (4 - 4 * mu + eta * (-1 + 2 * mu + mu**2))
+            elems[4] = 6*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu)))
+            elems[5] = alpha**2*(72 + 3*(-24 + eta)*eta - 2*(12 + eta*(-36 + 23*eta))*mu**2 + eta*(-48 + 47*eta)*mu**3)
+            elems = [elem / -24*(-3 + mu**2) + alpha*eta*(-24*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(3 + mu**2*(-46 + 47*mu))) for elem in elems]
             
             noisy_density_matrix = np.zeros((4, 4), dtype=complex)
-            noisy_density_matrix[3, 3]   = -elem[0]
-            noisy_density_matrix[6, 6]   = -elem[0]
-            noisy_density_matrix[9, 9]   = -elem[0]
-            noisy_density_matrix[12, 12] = -elem[0]
-            noisy_density_matrix[5, 5]   = elem[0] # |0101><0101|
-            noisy_density_matrix[10, 10] = elem[0] # |1010><1010|
-            noisy_density_matrix[3, 6]   = elem[1]
-            noisy_density_matrix[3, 9]   = elem[1]
-            noisy_density_matrix[6, 3]   = elem[1]
-            noisy_density_matrix[6, 12]  = elem[1]
-            noisy_density_matrix[9, 3]   = elem[1]
-            noisy_density_matrix[9, 12]  = elem[1]
-            noisy_density_matrix[12, 6]  = elem[1]
-            noisy_density_matrix[12, 9]  = elem[1]
-            noisy_density_matrix[5, 10]  = elem[2] # |0101><1010|
-            noisy_density_matrix[10, 5]  = elem[2] # |1010><0101|
-            noisy_density_matrix[7, 13]  = elem[3]
-            noisy_density_matrix[13, 7]  = elem[3]
-            noisy_density_matrix[11, 14] = elem[3]
-            noisy_density_matrix[14, 11] = elem[3]                
-            noisy_density_matrix[7, 7]   = elem[4] # |0111><0111|
-            noisy_density_matrix[11, 11] = elem[4] # |1011><1011|
-            noisy_density_matrix[13, 13] = elem[4] # |1101><1101|
-            noisy_density_matrix[14, 14] = elem[4] # |1110><1110|
-            noisy_density_matrix[15, 15] = elem[5] # |1111><1111|
+            noisy_density_matrix[0, 0]   = elem[0]  # |0000><0000|
+            noisy_density_matrix[3, 3]   = -elem[0] # |1100><1100|
+            noisy_density_matrix[6, 6]   = -elem[0] # |0110><0110|
+            noisy_density_matrix[9, 9]   = -elem[0] # |1001><1001|
+            noisy_density_matrix[12, 12] = -elem[0] # |0101><0101|
+            noisy_density_matrix[15, 15] = elem[0]  # |1111><1111|
             
-            self.p_link = 1/96 * alpha**2 * eta**2 * (-24 * (-3 + mu**2) - 24 * alpha * eta * (3 - 3 * mu**2 + 2 * mu**3) + alpha**2 * eta**2 * (3 - 46 * mu**2 + 47 * mu**3))
-            self.F_link = 12 * (-1 + alpha)**2 * (1 + (3 - 16 * F_prep + 48 * F_prep**2 - 64 * F_prep**3 + 32 * F_prep**4) * mu**2) \
-                / (-24 * (-3 + mu**2) - 24 * alpha * eta * (3 - 3 * mu**2 + 2 * mu**3) + alpha**2 * eta**2 * (3 - 46 * mu**2 + 47 * mu**3))
-
+            noisy_density_matrix[0, 15]  = elem[1]  # |0000><1111|
+            noisy_density_matrix[15, 0]  = elem[1]  # |1111><0000|
+            
+            noisy_density_matrix[3, 6]   = -elem[2] # |1100><0110|
+            noisy_density_matrix[3, 9]   = elem[2]  # |1100><1001|
+            noisy_density_matrix[6, 3]   = -elem[2] # |0110><1100|
+            noisy_density_matrix[6, 12]  = elem[2]  # |0110><0011|
+            noisy_density_matrix[9, 3]   = elem[2]  # |1001><1100|
+            noisy_density_matrix[9, 12]  = -elem[2] # |1001><0011|
+            noisy_density_matrix[12, 6]  = elem[2]  # |0011><0110|
+            noisy_density_matrix[12, 9]  = -elem[2] # |0011><1001|
+            
+            noisy_density_matrix[2, 8]   = elem[3]  # |0100><0001|
+            noisy_density_matrix[8, 2]   = elem[3]  # |0001><0100|
+            noisy_density_matrix[11, 14] = -elem[3] # |1101><0111|
+            noisy_density_matrix[14, 11] = -elem[3] # |0111><1101|
+            
+            noisy_density_matrix[2, 2]   = elem[4]  # |0100><0100|
+            noisy_density_matrix[8, 8]   = elem[4]  # |0001><0001|
+            noisy_density_matrix[11, 11] = elem[4]  # |1101><1101|
+            noisy_density_matrix[14, 14] = elem[4]  # |0111><0111|
+            
+            noisy_density_matrix[10, 10] = elem[5]  # |1010><1010|
+            
+            self.p_link = 1/16*alpha**2*eta**2*(alpha**2*eta**2*(47*mu**3-46*mu**2+3)-24*alpha*eta*(2*mu**3-3*mu**2+3)-24*(mu**2-3))
+            self.F_link = 2*sqrt(3)*sqrt((alpha-1)**2*(mu**2*(32*Fprep**4*(1-2*pEE)**4-64*Fprep**3*(1-2*pEE)**4+48*Fprep**2*(1-2*pEE)**4-16*Fprep*(1-2*pEE)**4+32*pEE**4-64*pEE**3+48*pEE**2-16*pEE+3)+1))/(alpha**2*eta**2*(47*mu**3-46*mu**2+3)-24*alpha*eta*(2*mu**3-3*mu**2+3)-24*(mu**2-3))
             return noisy_density_matrix
+        
+        if network_noise_type == 101:
+            
+            return
         
         if network_noise_type in range(101, 105):
             direct_emission_out = import_direct_emission_states(choice=network_noise_type, dynamic_states=self.dynamic_direct_states, path=None, p_g=self.p_g, p_m=self.p_g, eta=0.4472, p_n=0.01, p_emi=0.04)

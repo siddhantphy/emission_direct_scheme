@@ -358,8 +358,20 @@ class QuantumCircuit:
             self.F_link = 2*sqrt(3)*sqrt((alpha-1)**2*(mu**2*(32*Fprep**4*(1-2*pEE)**4-64*Fprep**3*(1-2*pEE)**4+48*Fprep**2*(1-2*pEE)**4-16*Fprep*(1-2*pEE)**4+32*pEE**4-64*pEE**3+48*pEE**2-16*pEE+3)+1))/(alpha**2*eta**2*(47*mu**3-46*mu**2+3)-24*alpha*eta*(2*mu**3-3*mu**2+3)-24*(mu**2-3))
             return noisy_density_matrix
         
-        if network_noise_type == 101:
+        # Basic circuit
+        if network_noise_type == 101: 
+            # How to prepare input density matrix
             
+            qubits = [qubit2, qubit1]
+            self._qubit_density_matrix_lookup.update({qubit1: (new_density_matrix, qubits),
+                                                      qubit2: (new_density_matrix, qubits)})
+            
+            self.apply_CNOT(0, 4)
+            self.apply_CNOT(1, 5)
+            self.apply_CNOT(2, 6)
+            self.apply_CNOT(3, 7)
+            
+            # How to do measurement
             return
         
         if network_noise_type in range(101, 105):

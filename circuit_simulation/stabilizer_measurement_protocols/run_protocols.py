@@ -738,6 +738,8 @@ def update_parameters(run_dict, circuit_args, default_values, varied_parameters)
                 new_set_parameters['F_link'] = None
                 update_dict['p_link'] = None
                 new_set_parameters['p_link'] = None
+            elif circuit_args['network_noise_type'] in [100, 101, 102, 103, 104]:
+                pass
             else:
                 for subparameter in ['F_link', 'p_link']:
                     if non_emission_based_data:
@@ -914,6 +916,8 @@ def update_parameters(run_dict, circuit_args, default_values, varied_parameters)
         circuit_args['bell_pair_type'] = 3
     elif circuit_args['network_noise_type'] in [99]:
         circuit_args['bell_pair_type'] = 0
+    elif circuit_args['network_noise_type'] in [100, 101, 102, 103, 104]:
+        pass
     else:
         run_dict['bell_pair_parameters'] = None
 
@@ -1486,7 +1490,6 @@ def run_for_arguments(operational_args, circuit_args, var_circuit_args, **kwargs
     fn = None
     # cut_off_dataframe = _get_cut_off_dataframe(operational_args['cut_off'])
     var_circuit_args['cut_off'] = _get_cut_off_dataframe(var_circuit_args['cut_off'])
-
     # node = {2: 'Pur', 0.021: 'NatAb', 0: 'Ideal'}
 
     iterations = circuit_args['iterations']

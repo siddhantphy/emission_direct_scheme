@@ -361,21 +361,9 @@ class QuantumCircuit:
             print(f"*** Success probability is {self.p_link}.***")
             return noisy_density_matrix
         
-        # Basic circuit
-        # if network_noise_type == 101: 
-        #     # How to prepare input density matrix
-            
-        #     qubits = [qubit2, qubit1]
-        #     self._qubit_density_matrix_lookup.update({qubit1: (new_density_matrix, qubits),
-        #                                               qubit2: (new_density_matrix, qubits)})
-            
-        #     self.apply_CNOT(0, 4)
-        #     self.apply_CNOT(1, 5)
-        #     self.apply_CNOT(2, 6)
-        #     self.apply_CNOT(3, 7)
-            
-        #     # How to do measurement
-        #     return
+        if network_noise_type == 101:
+            # Basic protocol for direct emission protocol
+            pass
         
         if network_noise_type in range(101, 105):
             direct_emission_out = import_direct_emission_states(choice=network_noise_type, dynamic_states=self.dynamic_direct_states, path=None, p_g=self.p_g, p_m=self.p_g, eta=0.4472, p_n=0.01, p_emi=0.04)

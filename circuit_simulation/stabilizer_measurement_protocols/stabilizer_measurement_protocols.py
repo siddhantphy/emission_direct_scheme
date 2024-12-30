@@ -1998,6 +1998,16 @@ def minimum4x_22_swap(qc: QuantumCircuit, *, operation):
 
 
 def direct_ghz(qc: QuantumCircuit, *, operation):
+    """
+    Creates a GHZ state directly using the provided QuantumCircuit object.
+
+    Parameters
+    ----------
+    qc : QuantumCircuit
+        The QuantumCircuit object to be used for creating the GHZ state.
+    operation : function
+        The operation to be performed on the GHZ state.
+    """
     qc.create_ghz_state_direct([*range(4)])
     return ["A", "B", "C", "D"]
 

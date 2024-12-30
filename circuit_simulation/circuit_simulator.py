@@ -414,23 +414,72 @@ class QuantumCircuit:
 
 
         if network_noise_type == 102:
-            # Basic protocol for direct emission scheme
+            # Bell-pair distillation for direct emission scheme
+            
             pass
-        
-        # if network_noise_type in range(101, 105):
-        #     direct_emission_out = import_direct_emission_states(choice=network_noise_type, dynamic_states=self.dynamic_direct_states, path=None, p_g=self.p_g, p_m=self.p_g, eta=0.4472, p_n=0.01, p_emi=0.04)
-        #     self.p_link = direct_emission_out[0]
-        #     noisy_density_matrix = direct_emission_out[1]
-        #     weight = 4
-        #     density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
-        #     density_matrix_target[0, 0] = 0.5
-        #     density_matrix_target[0, 2**weight-1] = 0.5
-        #     density_matrix_target[2**weight-1, 0] = 0.5
-        #     density_matrix_target[2**weight-1, 2**weight-1] = 0.5
-        #     self.F_link = fidelity(noisy_density_matrix, density_matrix_target)
-        #     print(f"*** GHZ state fidelity is {self.F_link}.***")
-        #     print(f"*** Success probability is {self.p_link}.***")
-        #     return noisy_density_matrix
+
+        if network_noise_type == 103:
+            # Basic protocol distillation for direct emission scheme
+            # We expplicitly code the basic protocol inclusive of decoherence effects to the GHZ state and then use that further in the stabilizer protocol
+            mu = bell_pair_parameters['mu']
+            F_prep = bell_pair_parameters['F_prep']
+            labda = bell_pair_parameters['lambda']
+            p_DE = bell_pair_parameters['p_DE']
+            eta = bell_pair_parameters['eta']
+            alpha = bell_pair_parameters['alpha']
+
+            weight = 4
+            density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
+            density_matrix_target[0, 0] = 0.5
+            density_matrix_target[0, 2**weight-1] = 0.5
+            density_matrix_target[2**weight-1, 0] = 0.5
+            density_matrix_target[2**weight-1, 2**weight-1] = 0.5
+            
+            raw_state_1 = sp.lil_matrix((2**weight, 2**weight), dtype=complex)
+            raw_state_1[0, 0] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[0, 15] = (-32*(1 - 2*F_prep)**4*(1 - 2*p_DE)**4*(-1 + alpha)**2*mu**2)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[2, 2] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[2, 8] =  (-8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[3, 3] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[3, 6] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[3, 9] =  (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[6, 3] = raw_state_1[3, 6]
+            raw_state_1[6, 6] =   (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[6, 12] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[8, 2] = raw_state_1[2, 8]
+            raw_state_1[8, 8] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[9, 3] = raw_state_1[3, 9]
+            raw_state_1[9, 9] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[9, 12] =  (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[10, 10] = (alpha**2*(32*(-3 + mu**2) + eta*(96 - 7*eta + 32*mu**2*(-3 + 2*mu) + eta*mu**2*(54 + (-56 + mu)*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[11, 11] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[11, 14] =  (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[12, 6] = raw_state_1[6, 12]
+            raw_state_1[12, 9] = raw_state_1[9, 12]
+            raw_state_1[12, 12] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[14, 11] = raw_state_1[11, 14]
+            raw_state_1[14, 14] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state_1[15, 0] = raw_state_1[0, 15]
+            raw_state_1[15, 15] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+
+            raw_state_2 = copy.deepcopy(raw_state_1)
+
+            # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled), but we apply the corresponding gate noise due to this operation.
+            
+ 
+
+
+            self.t_link = 6e-6
+            self.p_link = (-3*alpha**2*eta**2*(32*(-3 + mu**2) + 32*alpha*eta*(3 - 3*mu**2 + 2*mu**3) + alpha**2*eta**2*(-7 + 54*mu**2 - 56*mu**3 + mu**4)))/64
+            self.F_link = fidelity(noisy_density_matrix, density_matrix_target)
+            print(f"*** GHZ state fidelity is {self.F_link}.***")
+            print(f"*** Success probability is {self.p_link}.***")
+
+
+            
+        if network_noise_type == 104:
+            # W state distillation for direct emission scheme
+            pass
 
         if network_noise_type in range(10, 22):
             data = np.load('circuit_simulation/states/non_emission_based_99_fidelity_Bell_states.npy', allow_pickle=True)
@@ -869,7 +918,7 @@ class QuantumCircuit:
                 List containing the concurrent SubQuantumCircuit objects. Please only specify this parameter for the
                 last concurrent sub circuit object created, since otherwise the others cannot be found.
             involved_nodes : list
-                list of str containing the names of the nodes that are involved in the sub-circuit. if not provided,
+                list of str containing the names of the nodes that are involved in the sub-circuit. If not provided or None,
                 this is deduced from the name of the sub_circuit (example: sub circuit name "AB" will translate to
                 involved nodes "A" and "B".)
         """

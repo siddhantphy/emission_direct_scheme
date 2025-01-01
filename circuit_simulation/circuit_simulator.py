@@ -26,7 +26,6 @@ from circuit_simulation.utilities.decorators import (handle_none_parameters, ski
                                                      determine_qubit_index)
 from copy import deepcopy
 import copy
-from ._noise.noise_maps import N_amplitude_damping_channel, N_dephasing_channel, N_depolarising_channel, N_phase_damping_channel, N_two_qubit_gate
 import pickle
 from pprint import pprint
 import time
@@ -368,6 +367,7 @@ class QuantumCircuit:
             p_DE = bell_pair_parameters['p_DE']
             eta = bell_pair_parameters['eta']
             alpha = 1/2
+            pg=4*pg/3 # Make the conversion from the definition of mathematica
 
             weight = 4
             density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
@@ -467,7 +467,6 @@ class QuantumCircuit:
             raw_state_2 = deepcopy(raw_state_1)
 
             # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
-            raw_state_2 = N_depolarising_channel(pg,0,raw_state_2,4)
 
  
 

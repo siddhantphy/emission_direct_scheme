@@ -24,11 +24,11 @@ import cmath
 import functools as ft
 from circuit_simulation.utilities.decorators import (handle_none_parameters, skip_if_cut_off_reached, SKIP,
                                                      determine_qubit_index)
-from copy import deepcopy
-import copy
+from copy import copy
 import pickle
 from pprint import pprint
 import time
+import cirq
 SUM_ACCURACY = 16
 
 
@@ -437,43 +437,109 @@ class QuantumCircuit:
             density_matrix_target[2**weight-1, 0] = 0.5
             density_matrix_target[2**weight-1, 2**weight-1] = 0.5
             
-            raw_state_1 = sp.lil_matrix((2**weight, 2**weight), dtype=complex)
-            raw_state_1[0, 0] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[0, 15] = (-32*(1 - 2*F_prep)**4*(1 - 2*p_DE)**4*(-1 + alpha)**2*mu**2)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[2, 2] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[2, 8] =  (-8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[3, 3] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[3, 6] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[3, 9] =  (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[6, 3] = raw_state_1[3, 6]
-            raw_state_1[6, 6] =   (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[6, 12] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[8, 2] = raw_state_1[2, 8]
-            raw_state_1[8, 8] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[9, 3] = raw_state_1[3, 9]
-            raw_state_1[9, 9] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[9, 12] =  (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[10, 10] = (alpha**2*(32*(-3 + mu**2) + eta*(96 - 7*eta + 32*mu**2*(-3 + 2*mu) + eta*mu**2*(54 + (-56 + mu)*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[11, 11] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[11, 14] =  (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[12, 6] = raw_state_1[6, 12]
-            raw_state_1[12, 9] = raw_state_1[9, 12]
-            raw_state_1[12, 12] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[14, 11] = raw_state_1[11, 14]
-            raw_state_1[14, 14] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
-            raw_state_1[15, 0] = raw_state_1[0, 15]
-            raw_state_1[15, 15] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state = np.zeros((2**weight, 2**weight), dtype=complex)
+            raw_state[0, 0] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[0, 15] = (-32*(1 - 2*F_prep)**4*(1 - 2*p_DE)**4*(-1 + alpha)**2*mu**2)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[2, 2] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[2, 8] =  (-8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3, 3] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3, 6] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3, 9] =  (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[6, 3] = raw_state[3, 6]
+            raw_state[6, 6] =   (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[6, 12] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[8, 2] = raw_state[2, 8]
+            raw_state[8, 8] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[9, 3] = raw_state[3, 9]
+            raw_state[9, 9] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[9, 12] =  (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[10, 10] = (alpha**2*(32*(-3 + mu**2) + eta*(96 - 7*eta + 32*mu**2*(-3 + 2*mu) + eta*mu**2*(54 + (-56 + mu)*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[11, 11] =  (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[11, 14] =  (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[12, 6] = raw_state[6, 12]
+            raw_state[12, 9] = raw_state[9, 12]
+            raw_state[12, 12] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[14, 11] = raw_state[11, 14]
+            raw_state[14, 14] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[15, 0] = raw_state[0, 15]
+            raw_state[15, 15] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
 
-            raw_state_2 = deepcopy(raw_state_1)
+            p_link_raw = (-3*alpha**2*eta**2*(32*(-3 + mu**2) + 32*alpha*eta*(3 - 3*mu**2 + 2*mu**3) + alpha**2*eta**2*(-7 + 54*mu**2 - 56*mu**3 + mu**4)))/64
 
             # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
 
- 
+            qubits_1 = [cirq.LineQubit(i) for i in range(4)]  # Qubits for density matrix 1
+            qubits_2 = [cirq.LineQubit(i + 4) for i in range(4)]  # Qubits for density matrix 2
 
+            simulator = cirq.DensityMatrixSimulator()
+            combined_density_matrix = np.kron(raw_state, raw_state)
 
-            raw_t_link = 6e-6
-            raw_p_link = (-3*alpha**2*eta**2*(32*(-3 + mu**2) + 32*alpha*eta*(3 - 3*mu**2 + 2*mu**3) + alpha**2*eta**2*(-7 + 54*mu**2 - 56*mu**3 + mu**4)))/64
-            self.F_link = fidelity(raw_state_1, density_matrix_target)
+            t_CX = 25e-3
+
+            # Decoherence after the SWAP gates, before the CNOT gates
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2n_idle)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1n_idle)).on_each(qubits_2[i]) for i in range(4)]
+            # Gate noise on the raw-2 qubits
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
+            # Then decoherence noiuse due to the second link generation
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+
+            # Apply the 4-CNOT gates in parallel within all the nodes
+            cnots = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
+
+            # Apply depolarizing noise to the qubits involved in the CNOT gates
+            depolarizing_noise = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i], qubits_2[i]) for i in range(4)]
+
+            # Decoherence after the CNOT gates
+            # First on the memory qubits which suffer twice the duration of the two-qubit gates
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-2*t_CX/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-2*t_CX/self.T1n_link)).on_each(qubits_2[i]) for i in range(4)]
+            # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
+            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            depolarizing_noise = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i], qubits_2[i]) for i in range(4)]
+
+            # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
+            measurement_noise = [cirq.BitFlipChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
+
+            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + depolarizing_noise + measurement_noise)
+            result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+            final_density_matrix = result.final_density_matrix
+
+            # Post-select the second set of qubits (qubits_2) in |0><0| state, this is the detection pattern for the memory qubit measurement
+            # Define the projector for |0><0| on a single qubit
+            projector_0 = np.array([[1, 0], [0, 0]])
+            projector_1 = np.array([[0, 0], [0, 1]])
+
+            # Create the full projection operator for the second raw state
+            post_selection_operator = np.kron(np.eye(2**4), np.kron(projector_1, np.kron(projector_1, np.kron(projector_1, projector_1))))
+
+            # Apply the projection to the final density matrix
+            post_selected_matrix = post_selection_operator @ final_density_matrix @ post_selection_operator.T
+
+            # Renormalize the density matrix (ensure trace = 1)
+            p_distill = np.trace(post_selected_matrix)
+            if p_distill != 0:
+                print(p_distill)
+                post_selected_matrix /= p_distill
+
+            # Distilled emitter's state after the partial-trace
+            from qulacs import DensityMatrix
+            from qulacs.state import partial_trace
+
+            rho_basic = DensityMatrix(8)
+            rho_basic.load(rho_basic)
+            rho_emitters_basic = partial_trace(rho_basic, [4,5,6,7])
+            rho_emitters_basic = rho_emitters_basic.get_matrix()
+
+            rho_emitters_basic = sp.lil_matrix(rho_emitters_basic)
+            raw_t_link = 2 * 6e-6 
+            
+            self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
+            self.p_link = p_link_raw * p_distill
             print(f"*** GHZ state fidelity is {self.F_link}.***")
             print(f"*** Success probability is {self.p_link}.***")
 

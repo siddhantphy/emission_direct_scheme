@@ -515,7 +515,7 @@ class QuantumCircuit:
             projector_1 = np.array([[0, 0], [0, 1]])
 
             # Create the full projection operator for the second raw state
-            post_selection_operator = np.kron(np.eye(2**4), np.kron(projector_1, np.kron(projector_1, np.kron(projector_1, projector_1))))
+            post_selection_operator = np.kron(np.eye(2**4), np.kron(projector_0, np.kron(projector_0, np.kron(projector_0, projector_0))))
 
             # Apply the projection to the final density matrix
             post_selected_matrix = post_selection_operator @ final_density_matrix @ post_selection_operator.T
@@ -523,7 +523,6 @@ class QuantumCircuit:
             # Renormalize the density matrix (ensure trace = 1)
             p_distill = np.trace(post_selected_matrix)
             if p_distill != 0:
-                print(p_distill)
                 post_selected_matrix /= p_distill
 
             # Distilled emitter's state after the partial-trace
@@ -531,22 +530,21 @@ class QuantumCircuit:
             from qulacs.state import partial_trace
 
             rho_basic = DensityMatrix(8)
-            rho_basic.load(rho_basic)
+            rho_basic.load(post_selected_matrix)
             rho_emitters_basic = partial_trace(rho_basic, [4,5,6,7])
             rho_emitters_basic = rho_emitters_basic.get_matrix()
+            
 
             rho_emitters_basic = sp.lil_matrix(rho_emitters_basic)
-            raw_t_link = 2 * 6e-6 
+            raw_t_link = 6e-6
+            self.t_link = 2 * raw_t_link
             
             self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
             self.p_link = p_link_raw * p_distill
             print(f"*** GHZ state fidelity is {self.F_link}.***")
             print(f"*** Success probability is {self.p_link}.***")
 
-
-            import sys
-            sys.exit()
-
+            return rho_emitters_basic
 
             
         if network_noise_type == 104:

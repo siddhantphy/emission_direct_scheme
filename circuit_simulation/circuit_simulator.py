@@ -367,11 +367,10 @@ class QuantumCircuit:
             # Double-click protocol for direct emission scheme
             mu = bell_pair_parameters['mu']
             F_prep = bell_pair_parameters['F_prep']
-            labda = 1
+            labda = 1 # Ignore the path length differences for double-click protocol
             p_DE = bell_pair_parameters['p_DE']
             eta = bell_pair_parameters['eta']
-            alpha = bell_pair_parameters['alpha']
-            # alpha = 1/2
+            alpha = 1/2 # Optimal for success probability, while fidelity does not change w.r.t. alpha
             pg=4*pg/3 # Make the conversion from the definition of mathematica to the definition of the simulator for the depolarizing quantum channel
 
             weight = 4
@@ -428,17 +427,158 @@ class QuantumCircuit:
             labda = 1
             p_DE = bell_pair_parameters['p_DE']
             eta = bell_pair_parameters['eta']
-            alpha = 1/2
+            alpha = bell_pair_parameters['alpha']
             pg=4*pg/3 # Make the conversion from the definition of mathematica to the definition of the simulator for the depolarizing quantum channel
 
+            weight = 4
+            density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
+            density_matrix_target[0, 0] = 0.5
+            density_matrix_target[0, 2**weight-1] = 0.5
+            density_matrix_target[2**weight-1, 0] = 0.5
+            density_matrix_target[2**weight-1, 2**weight-1] = 0.5
+
+            alpha = 1/2
             double_click_bell_pair = np.zeros((4,4), dtype=complex)
             double_click_bell_pair[0,0] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
             double_click_bell_pair[0,3] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
             double_click_bell_pair[2,2] = (pg*(8 - 8*alpha + pg*(-4 + alpha*(8 + eta*(-3 + mu))))*(4 + eta*(-3 + mu)))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
             double_click_bell_pair[3,0] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
             double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
+            p_link_dc_bell = (alpha*eta**2*(32 + alpha*(-32 + 32*pg + pg**2*eta*(8 + eta*(-3 + mu))*(-3 + mu)) + 8*pg*eta*(-3 + mu) - 4*pg**2*eta*(-3 + mu)))/16
             
             pg=3*pg/4  # Reverse the scaling back to original
+            alpha = bell_pair_parameters['alpha']  
+            raw_state = np.zeros((2**weight, 2**weight), dtype=complex)
+            raw_state[0,0] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[0,15] = (-32*(1 - 2*F_prep)**4*(1 - 2*p_DE)**4*(-1 + alpha)**2*mu**2)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[2,2] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[2,8] = (-8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3,3] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3,6] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3,9] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[3,12] = 0
+            raw_state[6,3] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[6,6] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[6,9] = 0
+            raw_state[6,12] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[8,2] = (-8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[8,8] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[9,3] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[9,6] = 0
+            raw_state[9,9] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[9,12] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[10,10] = (alpha**2*(32*(-3 + mu**2) + eta*(96 - 7*eta + 32*mu**2*(-3 + 2*mu) + eta*mu**2*(54 + (-56 + mu)*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[11,11] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[11,14] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[12,3] = 0
+            raw_state[12,6] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[12,9] = (16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*(-1 + mu)*mu)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[12,12] = (16*(-1 + alpha)**2*(-1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[14,11] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha*mu*(4 - 4*mu + eta*(-1 + mu*(2 + mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[14,14] = (-8*(-1 + alpha)*alpha*(2*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[15,0] = (-32*(1 - 2*F_prep)**4*(1 - 2*p_DE)**4*(-1 + alpha)**2*mu**2)/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+            raw_state[15,15] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
+
+            p_link_raw = (-3*alpha**2*eta**2*(32*(-3 + mu**2) + 32*alpha*eta*(3 - 3*mu**2 + 2*mu**3) + alpha**2*eta**2*(-7 + 54*mu**2 - 56*mu**3 + mu**4)))/64
+
+            # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
+
+            qubits_1 = [cirq.LineQubit(i) for i in range(4)]  # Qubits for density matrix 1
+            qubits_2 = [cirq.LineQubit(i + 4) for i in range(2)]  # Qubits for first Bell-pair generation
+            qubits_3 = [cirq.LineQubit(i + 6) for i in range(2)] # Qubits for second Bell-pair generation
+            # We assume that Bell pairs are generated simultaneously in the two nodes
+
+            simulator = cirq.DensityMatrixSimulator()
+            combined_density_matrix = np.kron(raw_state,np.kron( double_click_bell_pair, double_click_bell_pair))
+
+            t_CX = 0.001
+
+            # Decoherence after the SWAP gates, before the CNOT gates
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_2[i],qubits_3 ) for i in range(2)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_2[i],qubits_3 ) for i in range(2)]
+            # Gate noise on the raw-2 qubits
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
+            # Then decoherence noise due to the second link generation
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
+
+            # Apply the 4-CNOT gates in parallel within all the nodes
+            cnots_layer_1 = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(2)] # All these CNOT gates are parallel on the architecture
+            cnots_layer_2 = [cirq.CNOT(qubits_1[i+2], qubits_3[i]) for i in range(2)] # All these CNOT gates are parallel on the architecture
+
+            # Apply depolarizing noise to the qubits involved in the CNOT gates
+            depolarizing_noise_layer_1 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i], qubits_2[i]) for i in range(2)]
+            depolarizing_noise_layer_2 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i+2], qubits_3[i]) for i in range(2)]
+
+            # Decoherence after the CNOT gates
+            # First on the memory qubits which suffer twice the duration of the two-qubit gates
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T2n_link)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T1n_link)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
+            # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
+            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            depolarizing_noise_layer_1 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i], qubits_2[i]) for i in range(2)]
+            depolarizing_noise_layer_2 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i+2], qubits_3[i]) for i in range(2)]
+
+            # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
+            measurement_noise_layer_1 = [cirq.BitFlipChannel(p=pg).on_each(qubits_2[i]) for i in range(2)]
+            measurement_noise_layer_2 = [cirq.BitFlipChannel(p=pg).on_each(qubits_3[i]) for i in range(2)]
+
+            circuit = cirq.Circuit(pd_channel_after_SWAP+gad_channel_after_SWAP+noise_SWAP+pd_channel_during_link+gad_channel_during_link+cnots_layer_1+cnots_layer_2+depolarizing_noise_layer_1+depolarizing_noise_layer_2+pd_channel_after_CNOTs_m+gad_channel_after_CNOTs_m+pd_channel_after_CNOTs_c+gad_channel_after_CNOTs_c+measurement_noise_layer_1+measurement_noise_layer_2)
+            result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+            final_density_matrix = result.final_density_matrix
+
+            # Post-select the second set of qubits (qubits_2) in |0><0| state, this is the detection pattern for the memory qubit measurement
+            # Define the projectors for |0><0| and |1><1| on a single qubit
+            projector_0 = np.array([[1, 0], [0, 0]])
+            projector_1 = np.array([[0, 0], [0, 1]])
+
+            # Create the full projection operator for the second raw state
+            post_selection_operator_0000 = np.kron(np.eye(2**4), np.kron(projector_0, np.kron(projector_0, np.kron(projector_0, projector_0))))
+            post_selection_operator_0011 = np.kron(np.eye(2**4), np.kron(projector_0, np.kron(projector_0, np.kron(projector_1, projector_1))))
+            post_selection_operator_1100 = np.kron(np.eye(2**4), np.kron(projector_1, np.kron(projector_1, np.kron(projector_0, projector_0))))
+            post_selection_operator_1111 = np.kron(np.eye(2**4), np.kron(projector_1, np.kron(projector_1, np.kron(projector_1, projector_1))))
+
+            # Apply the projection to the final density matrix
+            post_selected_matrix_0000 = post_selection_operator_0000 @ final_density_matrix @ post_selection_operator_0000.T
+            post_selected_matrix_0011 = post_selection_operator_0011 @ final_density_matrix @ post_selection_operator_0011.T
+            post_selected_matrix_1100 = post_selection_operator_1100 @ final_density_matrix @ post_selection_operator_1100.T
+            post_selected_matrix_1111 = post_selection_operator_1111 @ final_density_matrix @ post_selection_operator_1111.T
+
+            # Renormalize the density matrix (ensure trace = 1)
+            p_distill_0000 = np.trace(post_selected_matrix_0000)
+            p_distill_0011 = np.trace(post_selected_matrix_0011)
+            p_distill_1100 = np.trace(post_selected_matrix_1100)
+            p_distill_1111 = np.trace(post_selected_matrix_1111)
+
+            if p_distill_0000 != 0 and p_distill_0011 != 0 and p_distill_1100 != 0 and p_distill_1111 != 0:
+                post_selected_matrix_0000 /= p_distill_0000
+                post_selected_matrix_0011 /= p_distill_0011
+                post_selected_matrix_1100 /= p_distill_1100
+                post_selected_matrix_1111 /= p_distill_1111
+
+            post_selected_matrix = p_distill_0000 * post_selected_matrix_0000 + p_distill_0011 * post_selected_matrix_0011 + p_distill_1100 * post_selected_matrix_1100 + p_distill_1111 * post_selected_matrix_1111
+            norm = np.trace(post_selected_matrix)
+            post_selected_matrix /= norm
+            # Partial trace over qubits_2 (qubits 4 to 7)
+            dims = [2] * 8  # 8 qubits in total
+            keep_dims = np.prod([dims[i] for i in range(4)])  # Keep the first 4 qubits
+            trace_dims = np.prod(dims) // keep_dims
+            post_selected_matrix = post_selected_matrix.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
+            rho_emitters_basic = np.trace(post_selected_matrix, axis1=1, axis2=3)
+
+            rho_emitters_basic = sp.lil_matrix(rho_emitters_basic)
+            raw_t_link = 6e-6
+            self.t_link = 2 * raw_t_link 
+            
+            self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
+            self.p_link = p_link_raw * p_link_dc_bell * (p_distill_0000 + p_distill_0011 + p_distill_1100 + p_distill_1111)
+            print(f"*** GHZ state fidelity of the Bell distillation protocol state is {self.F_link}.***")
+            print(f"*** Success probability of the Bell distillation protocol state is {self.p_link}.***")
+
+            return rho_emitters_basic
 
 
         if network_noise_type == 103:
@@ -490,7 +630,6 @@ class QuantumCircuit:
             raw_state[15,15] = (-16*(-1 + alpha)**2*(1 + mu**2))/(32*(-3 + mu**2) + alpha*eta*(32*(3 + mu**2*(-3 + 2*mu)) + alpha*eta*(-7 + mu**2*(54 + (-56 + mu)*mu))))
 
             p_link_raw = (-3*alpha**2*eta**2*(32*(-3 + mu**2) + 32*alpha*eta*(3 - 3*mu**2 + 2*mu**3) + alpha**2*eta**2*(-7 + 54*mu**2 - 56*mu**3 + mu**4)))/64
-
             # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
 
             qubits_1 = [cirq.LineQubit(i) for i in range(4)]  # Qubits for density matrix 1
@@ -499,16 +638,16 @@ class QuantumCircuit:
             simulator = cirq.DensityMatrixSimulator()
             combined_density_matrix = np.kron(raw_state, raw_state)
 
-            t_CX = 25e-3
+            t_CX = 0.001
 
             # Decoherence after the SWAP gates, before the CNOT gates
-            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2n_idle)).on_each(qubits_2[i]) for i in range(4)]
-            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1n_idle)).on_each(qubits_2[i]) for i in range(4)]
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_2[i]) for i in range(4)]
             # Gate noise on the raw-2 qubits
             noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
-            # Then decoherence noiuse due to the second link generation
-            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
-            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            # Then decoherence noise due to the second link generation
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
 
             # Apply the 4-CNOT gates in parallel within all the nodes
             cnots = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
@@ -518,8 +657,8 @@ class QuantumCircuit:
 
             # Decoherence after the CNOT gates
             # First on the memory qubits which suffer twice the duration of the two-qubit gates
-            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-2*t_CX/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
-            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-2*t_CX/self.T1n_link)).on_each(qubits_2[i]) for i in range(4)]
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw+t_CX)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw+t_CX)/self.T1n_link)).on_each(qubits_2[i]) for i in range(4)]
             # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
             pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
             gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
@@ -535,7 +674,7 @@ class QuantumCircuit:
             final_density_matrix = result.final_density_matrix
 
             # Post-select the second set of qubits (qubits_2) in |0><0| state, this is the detection pattern for the memory qubit measurement
-            # Define the projector for |0><0| on a single qubit
+            # Define the projectors for |0><0| and |1><1| on a single qubit
             projector_0 = np.array([[1, 0], [0, 0]])
             projector_1 = np.array([[0, 0], [0, 1]])
 
@@ -556,15 +695,14 @@ class QuantumCircuit:
                 post_selected_matrix_1 /= p_distill_1
 
             post_selected_matrix = p_distill_0 * post_selected_matrix_0 + p_distill_1 * post_selected_matrix_1
-            # Distilled emitter's state after the partial-trace
-            from qulacs import DensityMatrix
-            from qulacs.state import partial_trace
-
-            rho_basic = DensityMatrix(8)
-            rho_basic.load(post_selected_matrix)
-            rho_emitters_basic = partial_trace(rho_basic, [4,5,6,7])
-            rho_emitters_basic = rho_emitters_basic.get_matrix()
-            
+            norm = np.trace(post_selected_matrix)
+            post_selected_matrix /= norm
+            # Partial trace over qubits_2 (qubits 4 to 7)
+            dims = [2] * 8  # 8 qubits in total
+            keep_dims = np.prod([dims[i] for i in range(4)])  # Keep the first 4 qubits
+            trace_dims = np.prod(dims) // keep_dims
+            post_selected_matrix = post_selected_matrix.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
+            rho_emitters_basic = np.trace(post_selected_matrix, axis1=1, axis2=3)
 
             rho_emitters_basic = sp.lil_matrix(rho_emitters_basic)
             raw_t_link = 6e-6
@@ -572,8 +710,8 @@ class QuantumCircuit:
             
             self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
             self.p_link = p_link_raw * (p_distill_0 + p_distill_1)
-            print(f"*** GHZ state fidelity of Basic protocol state is {self.F_link}.***")
-            print(f"*** Success probability of Basic protocol state is {self.p_link}.***")
+            print(f"*** GHZ state fidelity of the Basic protocol state is {self.F_link}.***")
+            print(f"*** Success probability of the Basic protocol state is {self.p_link}.***")
 
             return rho_emitters_basic
 
@@ -694,7 +832,105 @@ class QuantumCircuit:
 
             p_link_w = (alpha*eta*(256 - 768*alpha*eta + 16*alpha**2*eta**2*(49 + 3*mu**2 + 2*mu**3) + alpha**3*eta**3*(-271 - 42*mu**2 - 24*mu**3 + 9*mu**4)))/64
 
-            return w_state
+            # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because separately considered), but we apply the corresponding gate noise due to this operation.
+
+            qubits_raw = [cirq.LineQubit(i) for i in range(4)]  # Qubits for density matrix 1
+            qubits_w = [cirq.LineQubit(i + 4) for i in range(4)]  # Qubits for density matrix 2
+
+            simulator = cirq.DensityMatrixSimulator()
+            combined_density_matrix = np.kron(raw_state, w_state)
+
+            t_CX = 0.001
+
+            # Decoherence after the SWAP gates, before the CNOT gates
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_w[i]) for i in range(4)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_w[i]) for i in range(4)]
+            # Gate noise on the raw-2 qubits
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_w[i]) for i in range(4)]
+            # Then decoherence noise due to the second link generation
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
+
+            # Hadamards on the w-state qubits
+            hadamards = [cirq.H(qubits_w[i]) for i in range(4)]
+            hadamard_depolarising_noise = [cirq.DepolarizingChannel(p=pg).on_each(qubits_w[i]) for i in range(4)]
+            # Apply the 4-CNOT gates in parallel within all the nodes
+            cnots = [cirq.CNOT(qubits_raw[i], qubits_w[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
+
+            # Apply depolarizing noise to the qubits involved in the CNOT gates
+            depolarizing_noise = [cirq.DepolarizingChannel(p=pg).on_each(qubits_raw[i], qubits_w[i]) for i in range(4)]
+
+            # Decoherence after the CNOT gates
+            # First on the memory qubits which suffer twice the duration of the two-qubit gates
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-2*t_CX/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-2*t_CX/self.T1n_link)).on_each(qubits_w[i]) for i in range(4)]
+            # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
+            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_raw[i]) for i in range(4)]
+            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_raw[i]) for i in range(4)]
+
+            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            depolarizing_noise = [cirq.DepolarizingChannel(p=pg).on_each(qubits_raw[i], qubits_w[i]) for i in range(4)]
+
+            # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
+            measurement_noise = [cirq.BitFlipChannel(p=pg).on_each(qubits_w[i]) for i in range(4)]
+
+            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + hadamards + hadamard_depolarising_noise + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + depolarizing_noise + measurement_noise)
+            result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+            final_density_matrix = result.final_density_matrix
+
+            # Post-select the second set of qubits (qubits_w) in |0><0| state, this is the detection pattern for the memory qubit measurement
+            # Define the projector for |0><0| on a single qubit
+            projector_0 = np.array([[1, 0], [0, 0]])
+            projector_1 = np.array([[0, 0], [0, 1]])
+
+            # Create the full projection operator for the second raw state
+            post_selection_operator_0 = np.kron(np.eye(2**4), np.kron(projector_0, np.kron(projector_0, np.kron(projector_0, projector_0))))
+            post_selection_operator_1 = np.kron(np.eye(2**4), np.kron(projector_1, np.kron(projector_1, np.kron(projector_1, projector_1))))
+
+            # Apply the projection to the final density matrix
+            post_selected_matrix_0 = post_selection_operator_0 @ final_density_matrix @ post_selection_operator_0.T
+            post_selected_matrix_1 = post_selection_operator_1 @ final_density_matrix @ post_selection_operator_1.T
+
+            # Renormalize the density matrix (ensure trace = 1)
+            p_distill_0 = np.trace(post_selected_matrix_0)
+            p_distill_1 = np.trace(post_selected_matrix_1)
+
+            if p_distill_0 != 0 and p_distill_1 != 0:
+                post_selected_matrix_0 /= p_distill_0
+                post_selected_matrix_1 /= p_distill_1
+
+            # Partial trace over qubits_w (qubits 4 to 7)
+            dims = [2] * 8  # 8 qubits in total
+            keep_dims = np.prod([dims[i] for i in range(4)])  # Keep the first 4 qubits
+            trace_dims = np.prod(dims) // keep_dims
+
+            post_selected_matrix_0 = post_selected_matrix_0.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
+            rho_emitters_w_0 = np.trace(post_selected_matrix_0, axis1=1, axis2=3)
+
+            post_selected_matrix_1 = post_selected_matrix_1.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
+            rho_emitters_w_1 = np.trace(post_selected_matrix_1, axis1=1, axis2=3)
+            # Define Pauli matrices
+            I = np.eye(2)
+            Z = np.array([[1, 0], [0, -1]])
+            IZII = np.kron(I, np.kron(Z, np.kron(I, I)))
+
+            # Correct the density matrices with Pauli corrections
+            rho_emitters_w_0_corrected = IZII @ rho_emitters_w_0 @ IZII.T
+            rho_emitters_w_1_corrected = IZII @ rho_emitters_w_1 @ IZII.T
+
+            rho_emitters_w_total = p_distill_0 * rho_emitters_w_0_corrected + p_distill_1 * rho_emitters_w_1_corrected
+            rho_emitters_w_total = rho_emitters_w_total / np.trace(rho_emitters_w_total)
+            rho_emitters_w = sp.lil_matrix(rho_emitters_w_total)
+
+            raw_t_link = 6e-6
+            self.t_link = 2 * raw_t_link + t_CX
+            
+            self.F_link = fidelity(rho_emitters_w_total, density_matrix_target)
+            self.p_link = p_link_raw * p_link_w * (p_distill_0 + p_distill_1)
+            print(f"*** GHZ state fidelity of the W-state protocol state is {self.F_link}.***")
+            print(f"*** Success probability of the W-state protocol state is {self.p_link}.***")
+
+            return rho_emitters_w
         
         if network_noise_type in range(10, 22):
             data = np.load('circuit_simulation/states/non_emission_based_99_fidelity_Bell_states.npy', allow_pickle=True)

@@ -711,7 +711,7 @@ class QuantumCircuit:
             self.t_link = 2 * raw_t_link + t_CX
             
             self.F_link = fidelity(rho_emitters_bell_distilled, density_matrix_target)
-            self.p_link = p_link_raw * p_link_dc_bell * (p_distill_0000 + p_distill_0011 + p_distill_1100 + p_distill_1111)
+            self.p_link = 1/(1/p_link_raw + 1/p_link_dc_bell) * (p_distill_0000 + p_distill_0011 + p_distill_1100 + p_distill_1111)
             print(f"*** GHZ state fidelity of the Bell distillation protocol state is {self.F_link}.***")
             print(f"*** Success probability of the Bell distillation protocol state is {self.p_link}.***")
 
@@ -896,7 +896,7 @@ class QuantumCircuit:
             self.t_link = 2 * raw_t_link + t_CX
             
             self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
-            self.p_link = p_link_raw * (p_distill_0 + p_distill_1)
+            self.p_link = (p_link_raw/2) * (p_distill_0 + p_distill_1)
             print(f"*** GHZ state fidelity of the Basic protocol state is {self.F_link}.***")
             print(f"*** Success probability of the Basic protocol state is {self.p_link}.***")
 
@@ -1231,7 +1231,7 @@ class QuantumCircuit:
             self.t_link = 2 * raw_t_link + t_CX
             
             self.F_link = fidelity(rho_emitters_w_total, density_matrix_target)
-            self.p_link = p_link_raw * p_link_w * (p_distill_0 + p_distill_1)
+            self.p_link = 1/(1/p_link_raw + 1/p_link_w) * (p_distill_0 + p_distill_1)
             print(f"*** GHZ state fidelity of the W-state protocol state is {self.F_link}.***")
             print(f"*** Success probability of the W-state protocol state is {self.p_link}.***")
 

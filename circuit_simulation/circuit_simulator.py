@@ -312,8 +312,6 @@ class QuantumCircuit:
             print(f"*** Success probability is {self.p_link}.***")
             return noisy_density_matrix
         
-        if self.alpha_distill is None:
-            self.alpha_distill = bell_pair_parameters['alpha'] # Use alpha_distill = alpha if not explicitly stated as the default value
         if network_noise_type == 100:
             # Direct-emission scheme Raw state
             mu = bell_pair_parameters['mu']
@@ -503,6 +501,8 @@ class QuantumCircuit:
             eta = bell_pair_parameters['eta']
             alpha = bell_pair_parameters['alpha']
             bell_pair_protocol = bell_pair_parameters['ent_prot']
+            if self.alpha_distill is None:
+                self.alpha_distill = bell_pair_parameters['alpha'] # Use alpha_distill = alpha if not explicitly stated as the default value
 
             weight = 4
             density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
@@ -753,6 +753,8 @@ class QuantumCircuit:
             p_DE = bell_pair_parameters['p_DE']
             eta = bell_pair_parameters['eta']
             alpha = bell_pair_parameters['alpha']
+            if self.alpha_distill is None:
+                self.alpha_distill = bell_pair_parameters['alpha'] # Use alpha_distill = alpha if not explicitly stated as the default value
 
             weight = 4
             density_matrix_target = sp.lil_matrix((2**weight, 2**weight))
@@ -1005,6 +1007,8 @@ class QuantumCircuit:
             p_DE = bell_pair_parameters['p_DE']
             eta = bell_pair_parameters['eta']
             alpha = bell_pair_parameters['alpha']
+            if self.alpha_distill is None:
+                self.alpha_distill = bell_pair_parameters['alpha'] # Use alpha_distill = alpha if not explicitly stated as the default value
 
             weight = 4
             density_matrix_target = sp.lil_matrix((2**weight, 2**weight))

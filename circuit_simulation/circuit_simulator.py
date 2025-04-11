@@ -596,7 +596,7 @@ class QuantumCircuit:
                 p_link_sc_bell = alpha * eta * (alpha * eta * (mu - 3) + 4) / 2
 
             pg=4*pg/3 # Make the conversion from the definition of mathematica to the definition of the simulator for the depolarizing quantum channel
-            # alpha = 1/2
+            alpha = 0.5 # Bias to the optimal performance of the double-click bell pairs
             double_click_bell_pair = np.zeros((4,4), dtype=complex)
             if self.photon_number_resolution is True:
                 double_click_bell_pair[0,0] = (2 - 2*alpha + (-2 + pg)*pg*(1 + alpha*(-2 + eta)))/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))

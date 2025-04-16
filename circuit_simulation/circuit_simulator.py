@@ -484,7 +484,7 @@ class QuantumCircuit:
                 noisy_density_matrix[15,15] = (-16*(1 + mu**2)*(-256*(-1 + alpha)**2*(1 + mu**2) - 128*pg*(-1 + alpha)*(4*(1 + mu**2) - 2*alpha*(5 + mu**2) + alpha*eta*(3 + mu**2*(-3 + 2*mu))) - 4*pg**3*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + pg**4*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + 4*pg**2*(-32*(5 + mu**2) - 16*alpha*(2*(-19 + mu**2) + eta*(9 - 9*mu**2 + 6*mu**3)) + alpha**2*(-544 + 96*mu**2 + 80*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu))))))/(8192*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) + 128*pg**2*(96*(-1 + 2*alpha*(1 + alpha)) + 144*(1 + alpha*(-5 + 2*alpha))*eta + 3*(7 - 58*(-1 + alpha)*alpha)*eta**2 + (64 - 128*alpha*(1 + alpha) - 192*(1 + alpha*(-5 + 2*alpha))*eta + (-169 + 94*(-1 + alpha)*alpha)*eta**2)*mu**2 + 24*eta*(4 + 7*eta + 2*alpha**2*(4 + eta) - 2*alpha*(10 + eta))*mu**3 + (32*(5 + 2*alpha*(-5 + 3*alpha)) + 48*(1 + alpha*(-5 + 2*alpha))*eta + 3*(17 - 38*(-1 + alpha)*alpha)*eta**2)*mu**4 + 8*eta*(-4 - 7*eta + 2*alpha*(10 - 11*eta + alpha*(-4 + 11*eta)))*mu**5 + (1 - 94*(-1 + alpha)*alpha)*eta**2*mu**6) - 4096*pg*(-1 + alpha)*(6 - 4*mu**2 - 10*mu**4 + 4*alpha*(3 - 2*mu**2 + 3*mu**4) + eta*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu))) + pg**4*eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu))*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + 64*pg**3*eta*(-2*eta*(-3 + mu**2)*(-7 + mu**2*(54 + (-56 + mu)*mu)) + alpha*(-32*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta**2*(3 + mu**2*(-3 + 2*mu))*(-7 + mu**2*(54 + (-56 + mu)*mu)) - 2*eta*(9 + mu**2*(363 + mu*(-408 + mu*(-81 + mu*(72 + 29*mu)))))) + 4*alpha**2*(16*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta*(87 + mu**2*(-47 + mu*(-24 + mu*(57 + mu*(-88 + 47*mu))))))))
                 self.p_link = np.real((3*alpha**2*eta**4*(8192*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) + 128*pg**2*(96*(-1 + 2*alpha*(1 + alpha)) + 144*(1 + alpha*(-5 + 2*alpha))*eta + 3*(7 - 58*(-1 + alpha)*alpha)*eta**2 + (64 - 128*alpha*(1 + alpha) - 192*(1 + alpha*(-5 + 2*alpha))*eta + (-169 + 94*(-1 + alpha)*alpha)*eta**2)*mu**2 + 24*eta*(4 + 7*eta + 2*alpha**2*(4 + eta) - 2*alpha*(10 + eta))*mu**3 + (32*(5 + 2*alpha*(-5 + 3*alpha)) + 48*(1 + alpha*(-5 + 2*alpha))*eta + 3*(17 - 38*(-1 + alpha)*alpha)*eta**2)*mu**4 + 8*eta*(-4 - 7*eta + 2*alpha*(10 - 11*eta + alpha*(-4 + 11*eta)))*mu**5 + (1 - 94*(-1 + alpha)*alpha)*eta**2*mu**6) - 4096*pg*(-1 + alpha)*(6 - 4*mu**2 - 10*mu**4 + 4*alpha*(3 - 2*mu**2 + 3*mu**4) + eta*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu))) + pg**4*eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu))*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + 64*pg**3*eta*(-2*eta*(-3 + mu**2)*(-7 + mu**2*(54 + (-56 + mu)*mu)) + alpha*(-32*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta**2*(3 + mu**2*(-3 + 2*mu))*(-7 + mu**2*(54 + (-56 + mu)*mu)) - 2*eta*(9 + mu**2*(363 + mu*(-408 + mu*(-81 + mu*(72 + 29*mu)))))) + 4*alpha**2*(16*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta*(87 + mu**2*(-47 + mu*(-24 + mu*(57 + mu*(-88 + 47*mu)))))))))/131072)
 
-            self.t_link = 2e-5
+            self.t_link = 2e-5 + 1e-7
             self.F_link = fidelity(noisy_density_matrix, density_matrix_target)
             print(f"*** GHZ state fidelity of DC direct emission state is {self.F_link}.***")
             print(f"*** Success probability of DC direct emission state is {self.p_link}.***")
@@ -600,9 +600,9 @@ class QuantumCircuit:
             double_click_bell_pair = np.zeros((4,4), dtype=complex)
             if self.photon_number_resolution is True:
                 double_click_bell_pair[0,0] = (2 - 2*alpha + (-2 + pg)*pg*(1 + alpha*(-2 + eta)))/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
-                double_click_bell_pair[0,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*((1-mu)**(1/2)) - (1+mu)**(1/2))*((1-mu)**(1/2)) + (1+mu)**(1/2)/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
+                double_click_bell_pair[0,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
                 double_click_bell_pair[2,2] = (pg*(pg + 2*(-1 + alpha) + pg*alpha*(-2 + eta))*(-1 + eta))/(2 + (-2 + pg)*pg*eta + alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
-                double_click_bell_pair[3,0] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*((1-mu)**(1/2)) - (1+mu)**(1/2))*((1-mu)**(1/2)) + (1+mu)**(1/2)/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
+                double_click_bell_pair[3,0] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
                 double_click_bell_pair[3,3] = (2 - 2*alpha + (-2 + pg)*pg*(1 + alpha*(-2 + eta)))/(4 + 2*(-2 + pg)*pg*eta + 2*alpha*(-2 + pg*(2 + pg*(-2 + eta)*eta)))
                 p_link_dc_bell = alpha*eta**2*(2 - 2*pg*eta + pg**2*eta + alpha*(-2 + 2*pg + pg**2*(-2 + eta)*eta))
 
@@ -654,13 +654,15 @@ class QuantumCircuit:
                 return cirq.KrausChannel(correlated_two_qubit_noise_channel(p_g)).on(*qubits)
 
             # Decoherence after the SWAP gates, before the CNOT gates
-            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_2[i],qubits_3 ) for i in range(2)]
-            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_2[i],qubits_3 ) for i in range(2)]
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_1[i]) for i in range(4)]
+
             # Gate noise on the raw-2 qubits
-            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
             # Then decoherence noise due to the second link generation
-            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
-            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_2[i], qubits_3[i]) for i in range(2)]
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
 
             # Apply the 4-CNOT gates in parallel within all the nodes
             cnots_layer_1 = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(2)] # All these CNOT gates are parallel on the architecture
@@ -671,27 +673,25 @@ class QuantumCircuit:
             depolarizing_noise_layer_2 = [apply_correlated_two_qubit_noise_channel(pg, [qubits_1[i+2], qubits_3[i]]) for i in range(2)]
 
             # Decoherence after the CNOT gates
-            # First on the memory qubits which suffer twice the duration of the two-qubit gates
-            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T2n_link)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
-            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T1n_link)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
+            # First on the communication qubits
+            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
+            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_2[i],qubits_3[i]) for i in range(2)]
             # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
-            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
-            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_dc_bell+t_CX)/self.T1n_link)).on_each(qubits_1[i]) for i in range(4)]
 
-            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
-            depolarizing_noise_layer_1 = [apply_correlated_two_qubit_noise_channel(pg, [qubits_1[i], qubits_2[i]]) for i in range(2)]
-            depolarizing_noise_layer_2 = [apply_correlated_two_qubit_noise_channel(pg, [qubits_1[i+2], qubits_3[i]]) for i in range(2)]
-
-            # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
+            # Apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
             measurement_noise_layer_1 = [cirq.BitFlipChannel(p=pg).on_each(qubits_2[i]) for i in range(2)]
             measurement_noise_layer_2 = [cirq.BitFlipChannel(p=pg).on_each(qubits_3[i]) for i in range(2)]
 
+            
+
             circuit = cirq.Circuit(pd_channel_after_SWAP+gad_channel_after_SWAP+noise_SWAP+pd_channel_during_link+gad_channel_during_link+cnots_layer_1
                                    +cnots_layer_2+depolarizing_noise_layer_1+depolarizing_noise_layer_2+pd_channel_after_CNOTs_m+gad_channel_after_CNOTs_m
-                                   +pd_channel_after_CNOTs_c+gad_channel_after_CNOTs_c+ depolarizing_noise_layer_1 + depolarizing_noise_layer_2 
-                                   + measurement_noise_layer_1+measurement_noise_layer_2)
+                                   +pd_channel_after_CNOTs_c+gad_channel_after_CNOTs_c+measurement_noise_layer_1+measurement_noise_layer_2)
             result = simulator.simulate(circuit, initial_state=combined_density_matrix)
             final_density_matrix = result.final_density_matrix
+
 
             # Post-select the second set of qubits (qubits_2) in |0><0| state, this is the detection pattern for the memory qubit measurement
             # Define the projectors for |0><0| and |1><1| on a single qubit
@@ -732,16 +732,29 @@ class QuantumCircuit:
             post_selected_matrix = post_selected_matrix.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
             rho_emitters_bell_distilled = np.trace(post_selected_matrix, axis1=1, axis2=3)
 
-            rho_emitters_bell_distilled = sp.lil_matrix(rho_emitters_bell_distilled)
+            qubits_1 = [cirq.LineQubit(i) for i in range(4)]  # Qubits for communication qubits holding the distilled Raw state
+
+            # Now apply the SWAP noise and decoherence again on the final state
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
+            # Decoherence after the SWAP gates after the measurement
+            pd_channel_after_SWAP_c = [cirq.PhaseDampingChannel(1-np.exp(-4*t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_SWAP_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-4*t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+            circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
+            rho_emitters_bell_distilled_final = simulator.simulate(circuit, initial_state=rho_emitters_bell_distilled).final_density_matrix
+
+            rho_emitters_bell_distilled_final = sp.lil_matrix(rho_emitters_bell_distilled_final)
+
             raw_t_link = 1e-5
-            self.t_link = 2 * raw_t_link + t_CX
+            self.t_link = 2 * raw_t_link + 7 * t_CX
             
-            self.F_link = fidelity(rho_emitters_bell_distilled, density_matrix_target)
+            self.F_link = fidelity(rho_emitters_bell_distilled_final, density_matrix_target)
             self.p_link = np.real(1/(1/p_link_raw + 1/p_link_bell) * (p_distill_0000 + p_distill_0011 + p_distill_1100 + p_distill_1111))
             print(f"*** GHZ state fidelity of the Bell distillation protocol state is {self.F_link}.***")
             print(f"*** Success probability of the Bell distillation protocol state is {self.p_link}.***")
 
-            return rho_emitters_bell_distilled
+            return rho_emitters_bell_distilled_final
 
 
         if network_noise_type == 103:
@@ -930,7 +943,7 @@ class QuantumCircuit:
             noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
             # Then decoherence noise due to the second link generation
             pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw_2)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
-            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw_2)/self.T2n_link)).on_each(qubits_2[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw_2)/self.T1n_link)).on_each(qubits_2[i]) for i in range(4)]
 
             # Apply the 4-CNOT gates in parallel within all the nodes
             cnots = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
@@ -946,13 +959,10 @@ class QuantumCircuit:
             pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
             gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
 
-            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
-            depolarizing_noise = [apply_correlated_two_qubit_noise_channel(pg, [qubits_1[i], qubits_2[i]]) for i in range(4)]
-
             # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
             measurement_noise = [cirq.BitFlipChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
 
-            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + depolarizing_noise + measurement_noise)
+            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + measurement_noise)
             result = simulator.simulate(circuit, initial_state=combined_density_matrix)
             final_density_matrix = result.final_density_matrix
 
@@ -985,18 +995,32 @@ class QuantumCircuit:
             keep_dims = np.prod([dims[i] for i in range(4)])  # Keep the first 4 qubits
             trace_dims = np.prod(dims) // keep_dims
             post_selected_matrix = post_selected_matrix.reshape([keep_dims, trace_dims, keep_dims, trace_dims])
-            rho_emitters_basic = np.trace(post_selected_matrix, axis1=1, axis2=3)
-
-            rho_emitters_basic = sp.lil_matrix(rho_emitters_basic)
-            raw_t_link = 1e-5
-            self.t_link = 2 * raw_t_link + t_CX
+            rho_emitters_basic_distilled = np.trace(post_selected_matrix, axis1=1, axis2=3)
             
-            self.F_link = fidelity(rho_emitters_basic, density_matrix_target)
+            # Apply the 
+            qubits_1 = [cirq.LineQubit(i) for i in range(4)]
+
+            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
+            # Decoherence after the SWAP gates after the measurement
+            pd_channel_after_SWAP_c = [cirq.PhaseDampingChannel(1-np.exp(-4*t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_SWAP_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-4*t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+            circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
+            rho_emitters_basic_distilled_final = simulator.simulate(circuit, initial_state=rho_emitters_basic_distilled).final_density_matrix
+
+            rho_emitters_basic_distilled_final = sp.lil_matrix(rho_emitters_basic_distilled_final)
+
+            raw_t_link = 1e-5
+            self.t_link = 2 * raw_t_link + 7 * t_CX
+            
+            self.F_link = fidelity(rho_emitters_basic_distilled_final, density_matrix_target)
             self.p_link = np.real(1/(1/p_link_raw_1+1/p_link_raw_2) * (p_distill_0 + p_distill_1))
             print(f"*** GHZ state fidelity of the Basic protocol state is {self.F_link}.***")
             print(f"*** Success probability of the Basic protocol state is {self.p_link}.***")
 
-            return rho_emitters_basic
+            return rho_emitters_basic_distilled_final
 
             
         if network_noise_type == 104:
@@ -1247,13 +1271,13 @@ class QuantumCircuit:
                 return cirq.KrausChannel(correlated_two_qubit_noise_channel(p_g)).on(*qubits)
 
             # Decoherence after the SWAP gates, before the CNOT gates
-            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_w[i]) for i in range(4)]
-            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_w[i]) for i in range(4)]
+            pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX)/self.T2n_idle)).on_each(qubits_raw[i]) for i in range(4)]
+            gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX)/self.T1n_idle)).on_each(qubits_raw[i]) for i in range(4)]
             # Gate noise on the raw-2 qubits
-            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_w[i]) for i in range(4)]
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_raw[i]) for i in range(4)]
             # Then decoherence noise due to the second link generation
-            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
-            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
+            pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_raw[i]) for i in range(4)]
+            gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-(3*t_CX+self.t_link/p_link_raw)/self.T2n_link)).on_each(qubits_raw[i]) for i in range(4)]
 
             # Hadamards on the w-state qubits
             hadamards = [cirq.H(qubits_w[i]) for i in range(4)]
@@ -1266,19 +1290,17 @@ class QuantumCircuit:
 
             # Decoherence after the CNOT gates
             # First on the memory qubits which suffer twice the duration of the two-qubit gates
-            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-2*t_CX/self.T2n_link)).on_each(qubits_w[i]) for i in range(4)]
-            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-2*t_CX/self.T1n_link)).on_each(qubits_w[i]) for i in range(4)]
+            pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-2*t_CX/self.T2n_link)).on_each(qubits_raw[i]) for i in range(4)]
+            gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-2*t_CX/self.T1n_link)).on_each(qubits_raw[i]) for i in range(4)]
             # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
-            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_raw[i]) for i in range(4)]
-            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_raw[i]) for i in range(4)]
+            pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-t_CX/self.T2e_idle)).on_each(qubits_w[i]) for i in range(4)]
+            gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-t_CX/self.T1e_idle)).on_each(qubits_w[i]) for i in range(4)]
 
-            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
-            depolarizing_noise = [apply_correlated_two_qubit_noise_channel(pg, [qubits_raw[i], qubits_w[i]]) for i in range(4)]
 
             # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
             measurement_noise = [cirq.BitFlipChannel(p=pg).on_each(qubits_w[i]) for i in range(4)]
 
-            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + hadamards + hadamard_depolarising_noise + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + depolarizing_noise + measurement_noise)
+            circuit = cirq.Circuit(pd_channel_after_SWAP + gad_channel_after_SWAP + noise_SWAP + pd_channel_during_link + gad_channel_during_link + hadamards + hadamard_depolarising_noise + cnots + depolarizing_noise + pd_channel_after_CNOTs_m + gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c + measurement_noise)
             result = simulator.simulate(circuit, initial_state=combined_density_matrix)
             final_density_matrix = result.final_density_matrix
 
@@ -1324,17 +1346,30 @@ class QuantumCircuit:
 
             rho_emitters_w_total = p_distill_0 * rho_emitters_w_0_corrected + p_distill_1 * rho_emitters_w_1_corrected
             rho_emitters_w_total = rho_emitters_w_total / np.trace(rho_emitters_w_total)
-            rho_emitters_w = sp.lil_matrix(rho_emitters_w_total)
-
-            raw_t_link = 1e-5
-            self.t_link = 2 * raw_t_link + t_CX
             
-            self.F_link = fidelity(rho_emitters_w_total, density_matrix_target)
+            # Apply the depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            qubits_1 = [cirq.LineQubit(i) for i in range(4)]
+
+            # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+            noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
+            # Decoherence after the SWAP gates after the measurement
+            pd_channel_after_SWAP_c = [cirq.PhaseDampingChannel(1-np.exp(-4*t_CX/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+            gad_channel_after_SWAP_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-4*t_CX/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+            circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
+            rho_emitters_w_total_final = simulator.simulate(circuit, initial_state=rho_emitters_w_total).final_density_matrix
+
+            rho_emitters_w_total_final = sp.lil_matrix(rho_emitters_w_total_final)
+            raw_t_link = 1e-5
+            self.t_link = 2 * raw_t_link + 7 * t_CX
+            
+            self.F_link = fidelity(rho_emitters_w_total_final, density_matrix_target)
             self.p_link = np.real(1/(1/p_link_raw + 1/p_link_w) * (p_distill_0 + p_distill_1))
             print(f"*** GHZ state fidelity of the W-state protocol state is {self.F_link}.***")
             print(f"*** Success probability of the W-state protocol state is {self.p_link}.***")
 
-            return rho_emitters_w
+            return rho_emitters_w_total_final
         
         if network_noise_type in range(10, 22):
             data = np.load('circuit_simulation/states/non_emission_based_99_fidelity_Bell_states.npy', allow_pickle=True)

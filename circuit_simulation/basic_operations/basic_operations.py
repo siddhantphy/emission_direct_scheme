@@ -123,9 +123,18 @@ def fidelity(rho, sigma):
     if not sp.issparse(sigma):
         sigma = sp.csr_matrix(sigma)
 
-    rho_root = sp.csr_matrix(sqrtm(rho.toarray()))
-    resulting_matrix = sqrtm((rho_root * sigma * rho_root).toarray())
-    return trace(resulting_matrix)
+    # Ensure matrices are positive semi-definite by adding a small regularization term
+    epsilon = 1e-10
+    rho = rho + epsilon * sp.eye(rho.shape[0], format='csr')
+    sigma = sigma + epsilon * sp.eye(sigma.shape[0], format='csr')
+
+    try:
+        rho_root = sp.csr_matrix(sqrtm(rho.toarray()))
+        resulting_matrix = sqrtm((rho_root * sigma * rho_root).toarray())
+        return trace(resulting_matrix)
+    except Exception as e:
+        print(f"Error calculating fidelity: {e}")
+        return 0.0  # Return a default value in case of failure
 
 
 def fidelity_elementwise(rho, sigma):

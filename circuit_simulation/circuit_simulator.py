@@ -220,6 +220,7 @@ class QuantumCircuit:
         self.alpha_distill = alpha_distill
         self.only_GHZ = only_GHZ
         self.shots_emission_direct = shots_emission_direct
+        self.emission_direct_statistics = {"p_link": [], "F_link": [], "t_link": []}
         self.noisy_bell_state = self._construct_noisy_bell_pair_state(bell_pair_parameters, network_noise_type, pg=self.p_g,only_GHZ=self.only_GHZ)
         
 
@@ -699,9 +700,9 @@ class QuantumCircuit:
             # raw_state is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
             rho_emitters_bell_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_bell_distilled_final[:, :] = 0  # Fill the matrix with all zeros
-            t_link = 0 # Time for the link generation
-            f_link = 0 # Fidelity average
-            p_link = 0 # Probability of link generation
+            t_link = [] # Time for the average link generation
+            f_link = [] # Fidelity average
+            p_link = [] # Probability of link generation
             successful_shots = 0 # Number of successful shots
 
             if self.only_GHZ is True: # If we only want to model and analyse the GHZ state then we repeat the shots, else we repeat the entire stabilizer protocol
@@ -855,13 +856,13 @@ class QuantumCircuit:
                     rho_emitters_bell_distilled_current = sp.lil_matrix(rho_emitters_bell_distilled_current)
 
                     current_t_link = total_time
-                    t_link += current_t_link # Total time for the link generation
+                    t_link.append(current_t_link) # Total time for the link generation per shot
 
                     current_f_link = fidelity(rho_emitters_bell_distilled_current, target_GHZ_state)
-                    f_link += current_f_link # Fidelity average
+                    f_link.append(current_f_link)
 
                     current_p_link = np.real(1/(attempts_raw+attempts_bell) * p_distill)
-                    p_link += current_p_link
+                    p_link.append(current_p_link)
 
                     rho_emitters_bell_distilled_final += rho_emitters_bell_distilled_current # Add the current density matrix to the final density matrix
                 else:
@@ -869,9 +870,10 @@ class QuantumCircuit:
 
             if successful_shots != 0:
                 rho_emitters_bell_distilled_final /= successful_shots # Normalize the final density matrix
-                self.t_link = t_link/successful_shots
-                self.F_link = f_link/successful_shots
-                self.p_link = p_link/successful_shots
+                self.t_link = np.mean(t_link)
+                self.F_link = np.mean(f_link)
+                self.p_link = np.mean(p_link)
+                self.emission_direct_statistics = {"p_link": t_link, "F_link": f_link, "t_link": t_link}
             if successful_shots == 0:
                 self.t_link = np.inf
                 self.F_link = 0
@@ -1041,9 +1043,9 @@ class QuantumCircuit:
 
             rho_emitters_basic_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_basic_distilled_final[:, :] = 0  # Fill the matrix with all zeros
-            t_link = 0 # Time for the link generation
-            f_link = 0 # Fidelity average
-            p_link = 0 # Probability of link generation
+            t_link = [] # Time for the link generation
+            f_link = [] # Fidelity average
+            p_link = [] # Probability of link generation
             successful_shots = 0 # Number of successful shots
 
             if self.only_GHZ is True: # If we only want to model and analyse the GHZ state then we repeat the shots, else we repeat the entire stabilizer protocol
@@ -1172,13 +1174,13 @@ class QuantumCircuit:
                     rho_emitters_basic_distilled_current = sp.lil_matrix(rho_emitters_basic_distilled_current)
 
                     current_t_link = total_time
-                    t_link += current_t_link # Total time for the link generation
+                    t_link.append(current_t_link) # Total time for the link generation
 
                     current_f_link = fidelity(rho_emitters_basic_distilled_current, target_GHZ_state)
-                    f_link += current_f_link # Fidelity average
+                    f_link.append(current_f_link) # Fidelity average
 
                     current_p_link = np.real(1/(attempts_raw_1+attempts_raw_2) * p_distill)
-                    p_link += current_p_link
+                    p_link.append(current_p_link)
 
                     rho_emitters_basic_distilled_final += rho_emitters_basic_distilled_current # Add the current density matrix to the final density matrix
                 else:
@@ -1186,9 +1188,10 @@ class QuantumCircuit:
 
             if successful_shots != 0:
                 rho_emitters_basic_distilled_final /= successful_shots # Normalize the final density matrix
-                self.t_link = t_link/successful_shots
-                self.F_link = f_link/successful_shots
-                self.p_link = p_link/successful_shots
+                self.t_link = np.mean(t_link) # Average time for the link generation
+                self.F_link = np.mean(f_link) # Average fidelity
+                self.p_link = np.mean(p_link) # Average probability
+                self.emission_direct_statistics = {"p_link": t_link, "F_link": f_link, "t_link": t_link}
             if successful_shots == 0:
                 self.t_link = np.inf
                 self.F_link = 0
@@ -1437,9 +1440,9 @@ class QuantumCircuit:
 
             rho_emitters_W_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_W_distilled_final[:, :] = 0  # Fill the matrix with all zeros
-            t_link = 0 # Time for the link generation
-            f_link = 0 # Fidelity average
-            p_link = 0 # Probability of link generation
+            t_link = [] # Time for the link generation
+            f_link = [] # Fidelity average
+            p_link = [] # Probability of link generation
             successful_shots = 0 # Number of successful shots
 
             if self.only_GHZ is True: # If we only want to model and analyse the GHZ state then we repeat the shots, else we repeat the entire stabilizer protocol
@@ -1589,13 +1592,13 @@ class QuantumCircuit:
                     rho_emitters_W_distilled_current = sp.lil_matrix(rho_emitters_W_distilled_current)
 
                     current_t_link = total_time
-                    t_link += current_t_link # Total time for the link generation
+                    t_link.append(current_t_link) # Total time for the link generation
 
                     current_f_link = fidelity(rho_emitters_W_distilled_current, target_GHZ_state)
-                    f_link += current_f_link # Fidelity average
+                    f_link.append(current_f_link) # Fidelity average
 
                     current_p_link = np.real(1/(attempts_raw+attempts_w) * p_distill)
-                    p_link += current_p_link
+                    p_link.append(current_p_link)
 
                     rho_emitters_W_distilled_final += rho_emitters_W_distilled_current # Add the current density matrix to the final density matrix
                 else:
@@ -1603,9 +1606,10 @@ class QuantumCircuit:
 
             if successful_shots != 0:
                 rho_emitters_W_distilled_final /= successful_shots # Normalize the final density matrix
-                self.t_link = t_link/successful_shots
-                self.F_link = f_link/successful_shots
-                self.p_link = p_link/successful_shots
+                self.t_link = np.mean(t_link)  # Average time for the link generation
+                self.F_link = np.mean(f_link)  # Average fidelity
+                self.p_link = np.mean(p_link)  # Average probability
+                self.emission_direct_statistics = {"p_link": t_link, "F_link": f_link, "t_link": t_link}
             if successful_shots == 0:
                 self.t_link = np.inf
                 self.F_link = 0
@@ -1654,8 +1658,8 @@ class QuantumCircuit:
                 double_click_bell_pair[3,0] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
                 double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
                 p_link_dc_bell = (alpha*eta**2*(32 + alpha*(-32 + 32*pg + pg**2*eta*(8 + eta*(-3 + mu))*(-3 + mu)) + 8*pg*eta*(-3 + mu) - 4*pg**2*eta*(-3 + mu)))/16
-        
-        
+
+
 
             # Create a circuit for the Bell pair fusion protocol
             bell_dc_t_link = 1e-5  # Time for one link generation attempt

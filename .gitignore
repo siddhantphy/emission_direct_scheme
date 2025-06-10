@@ -9,7 +9,6 @@
 *.txt
 *.lprof
 *.npz
-*.pdf
 *.lock
 
 .python-version

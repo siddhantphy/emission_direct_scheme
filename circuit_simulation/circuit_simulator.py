@@ -1195,7 +1195,6 @@ class QuantumCircuit:
                 self.p_link = 0
                 rho_emitters_basic_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters if the attempts fail!
 
-
             print(f"*** GHZ state fidelity of the GHZ Basic protocol state is {self.F_link}.***")
             print(f"*** Success rate of the GHZ Basic protocol state is {self.p_link}.***")
             print("#################################################")
@@ -1621,6 +1620,7 @@ class QuantumCircuit:
             return rho_emitters_W_distilled_final
         
         # k=11 Bell-pair fusion scheme for comparison (k=11 scheme)
+        # Figure of this scheme is appened in `results.ipynb`
         if network_noise_type == 105:
             mu = bell_pair_parameters['mu']
             F_prep = bell_pair_parameters['F_prep']
@@ -1986,6 +1986,8 @@ class QuantumCircuit:
                 # Distill ABCD with BD via ZZ
 
                 rho_fusion_protocol_final += distilled_bell_AB # Add the current density matrix to the final density matrix
+
+                
                 current_t_link = total_time
                 t_link += current_t_link # Total time for the link generation
                 current_f_link = fidelity(distilled_bell_AB, density_matrix_target)

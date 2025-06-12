@@ -51,7 +51,7 @@ def simulate_one(params):
             "Distill DC Bell": 102
         }[protocol]
         qc = QuantumCircuit(
-            1, p_g=pg, network_noise_type=network_noise_type, only_GHZ=True, shots_emission_direct=shots,
+            0, p_g=pg, network_noise_type=network_noise_type, only_GHZ=True, shots_emission_direct=shots,
             bell_pair_parameters=bell_params,
             T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time,
             T2e_idle=coh_time, T1e_idle=coh_time

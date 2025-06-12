@@ -1,0 +1,455 @@
+***************************************************************************************************** 
+* WARNING: The 2022 software stack is deprecated. Please consider switching to
+the latest 2024 * 
+* software stack, or the older 2023 software stack. * 
+* * 
+* If you have any question, please contact us via
+http://servicedesk.surfsara.nl. * 
+***************************************************************************************************** 
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** Bell state fidelity is 0.798335551658613.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.8293389513031706.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.0833331048488617.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.8459095720727352.***
+*** GHZ state fidelity of the raw state-2 is 0.604856280195001.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** GHZ state fidelity of the W-state is 0.5968903754441829.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** Bell state fidelity is 0.798335551658613.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.7492440871246615.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.0833332339922587.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.7690167124149029.***
+*** GHZ state fidelity of the raw state-2 is 0.604856280195001.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.8226652710637541.***
+*** Success rate of the GHZ Basic protocol state is 0.00943393920952419.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** GHZ state fidelity of the W-state is 0.5968903754441829.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** Bell state fidelity is 0.9429636254571607.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.9075942194295701.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.06666630109151205.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.604856280195001.***
+*** GHZ state fidelity of the raw state-2 is 0.8459095720727352.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.8783554868461264.***
+*** Success rate of the GHZ Basic protocol state is 0.0024630430296724067.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** GHZ state fidelity of the W-state is 0.8814586441583803.***
+*** GHZ state fidelity of the W-State protocol state is 0.7803393986431864.***
+*** Success rate of the W-State protocol state is 0.052631146029422156.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** Bell state fidelity is 0.8517172258121961.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.856217658731596.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333318432172139.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.8459095720727352.***
+*** GHZ state fidelity of the raw state-2 is 0.6887714564251675.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.8967384733130948.***
+*** Success rate of the GHZ Basic protocol state is 0.002283097946480529.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** GHZ state fidelity of the W-state is 0.6977702394020744.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** Bell state fidelity is 0.8995942577823168.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.7990365847271137.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.0769227697299077.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.6887714564251675.***
+*** GHZ state fidelity of the raw state-2 is 0.7690167124149029.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** GHZ state fidelity of the W-state is 0.7926488476094344.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** Bell state fidelity is 0.9429636254571607.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.9093335478052265.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.06666643619537353.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.8459095720727352.***
+*** GHZ state fidelity of the raw state-2 is 0.8459095720727352.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.9294926710888561.***
+*** Success rate of the GHZ Basic protocol state is 0.001564943081522958.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** GHZ state fidelity of the W-state is 0.8814586441583803.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** Bell state fidelity is 0.798335551658613.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.5823303480098837.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333322405815125.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.604856280195001.***
+*** GHZ state fidelity of the raw state-2 is 0.604856280195001.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** GHZ state fidelity of the W-state is 0.5968903754441829.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** Bell state fidelity is 0.9429636254571607.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.9088981103231313.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.06666653951009115.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.7690167124149029.***
+*** GHZ state fidelity of the raw state-2 is 0.8459095720727352.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.9098299128148464.***
+*** Success rate of the GHZ Basic protocol state is 0.002463045085004985.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** GHZ state fidelity of the W-state is 0.8814586441583803.***
+*** GHZ state fidelity of the W-State protocol state is 0.8513658769773201.***
+*** Success rate of the W-State protocol state is 0.03846141695976257.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** Bell state fidelity is 0.9429636254571607.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.9083387905676423.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.06666646003723145.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.6887714564251675.***
+*** GHZ state fidelity of the raw state-2 is 0.8459095720727352.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.8960537637069423.***
+*** Success rate of the GHZ Basic protocol state is 0.002463042736053467.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** GHZ state fidelity of the W-state is 0.8814586441583803.***
+*** GHZ state fidelity of the W-State protocol state is 0.8190435290549182.***
+*** Success rate of the W-State protocol state is 0.03846138257246751.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** Bell state fidelity is 0.8517172258121961.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.7363602668045537.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333314458529154.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.6887714564251675.***
+*** GHZ state fidelity of the raw state-2 is 0.6887714564251675.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** GHZ state fidelity of the W-state is 0.6977702394020744.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** Bell state fidelity is 0.8517172258121961.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.6668980359300734.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333302537600198.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.604856280195001.***
+*** GHZ state fidelity of the raw state-2 is 0.6887714564251675.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** GHZ state fidelity of the W-state is 0.6977702394020744.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** Bell state fidelity is 0.798335551658613.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.6670023667080005.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333310981591542.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.6887714564251675.***
+*** GHZ state fidelity of the raw state-2 is 0.604856280195001.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** GHZ state fidelity of the W-state is 0.5968903754441829.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** Bell state fidelity is 0.8995942577823168.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.7490323875225653.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.07692296688373272.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.604856280195001.***
+*** GHZ state fidelity of the raw state-2 is 0.7690167124149029.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** GHZ state fidelity of the W-state is 0.7926488476094344.***
+*** GHZ state fidelity of the W-State protocol state is 0.7271715016012273.***
+*** Success rate of the W-State protocol state is 0.07692261842580943.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** Bell state fidelity is 0.8995942577823168.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.8413342238776165.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.0769228247495798.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.7690167124149029.***
+*** GHZ state fidelity of the raw state-2 is 0.7690167124149029.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** GHZ state fidelity of the W-state is 0.7926488476094344.***
+*** GHZ state fidelity of the W-State protocol state is 0.797236150939386.***
+*** Success rate of the W-State protocol state is 0.027026898152119404.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** Bell state fidelity is 0.8995942577823168.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.877599118443168.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.07692287518427923.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.8459095720727352.***
+*** GHZ state fidelity of the raw state-2 is 0.7690167124149029.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.910357438965792.***
+*** Success rate of the GHZ Basic protocol state is 0.0022935690956378202.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** GHZ state fidelity of the W-state is 0.7926488476094344.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** Bell state fidelity is 0.9825592114241788.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.6887714564251675.***
+*** GHZ state fidelity of the raw state-2 is 0.9197244695026903.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.6887714564251675.***
+*** GHZ state fidelity of the W-state is 0.9643657229201781.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** Bell state fidelity is 0.8517172258121961.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.7991358704567126.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.08333314458529154.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.7690167124149029.***
+*** GHZ state fidelity of the raw state-2 is 0.6887714564251675.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.9291620149643997.***
+*** Success rate of the GHZ Basic protocol state is 0.008333300054073334.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** GHZ state fidelity of the W-state is 0.6977702394020744.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** Bell state fidelity is 0.9825592114241788.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.604856280195001.***
+*** GHZ state fidelity of the raw state-2 is 0.9197244695026903.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.604856280195001.***
+*** GHZ state fidelity of the W-state is 0.9643657229201781.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** Bell state fidelity is 0.9825592114241788.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.8459095720727352.***
+*** GHZ state fidelity of the raw state-2 is 0.9197244695026903.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.8459095720727352.***
+*** GHZ state fidelity of the W-state is 0.9643657229201781.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** Bell state fidelity is 0.9825592114241788.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.7690167124149029.***
+*** GHZ state fidelity of the raw state-2 is 0.9197244695026903.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.7690167124149029.***
+*** GHZ state fidelity of the W-state is 0.9643657229201781.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** Bell state fidelity is 0.8995942577823168.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.542628813960138.***
+*** Success rate of the Bell-distillation GHZ protocol state is 4.46704130680932e-07.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.9197244695026903.***
+*** GHZ state fidelity of the raw state-2 is 0.7690167124149029.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** GHZ state fidelity of the W-state is 0.7926488476094344.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** Bell state fidelity is 0.8517172258121961.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.6332163488360588.***
+*** Success rate of the Bell-distillation GHZ protocol state is 4.4670514245945223e-07.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.9197244695026903.***
+*** GHZ state fidelity of the raw state-2 is 0.6887714564251675.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** GHZ state fidelity of the W-state is 0.6977702394020744.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** Bell state fidelity is 0.9429636254571607.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.***
+*** Success rate of the Bell-distillation GHZ protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.9197244695026903.***
+*** GHZ state fidelity of the raw state-2 is 0.8459095720727352.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.***
+*** Success rate of the GHZ Basic protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** GHZ state fidelity of the W-state is 0.8814586441583803.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** Bell state fidelity is 0.798335551658613.***
+*** GHZ state fidelity of the Bell-distillation GHZ protocol state is 0.6719062310116377.***
+*** Success rate of the Bell-distillation GHZ protocol state is 4.467071382196665e-07.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state-1 is 0.9197244695026903.***
+*** GHZ state fidelity of the raw state-2 is 0.604856280195001.***
+*** GHZ state fidelity of the GHZ Basic protocol state is 0.9287500440688798.***
+*** Success rate of the GHZ Basic protocol state is 2.013513665843189e-07.***
+#################################################
+#################################################
+*** GHZ state fidelity of the raw state is 0.9197244695026903.***
+*** GHZ state fidelity of the W-state is 0.5968903754441829.***
+*** GHZ state fidelity of the W-State protocol state is 0.***
+*** Success rate of the W-State protocol state is 0.***
+#################################################
+
+JOB STATISTICS
+==============
+Job ID: 12285996
+Cluster: snellius
+User/Group: siddhant/siddhant
+State: RUNNING
+Nodes: 1
+Cores per node: 192
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 01:26:24 core-walltime
+Job Wall-clock time: 00:00:27
+Memory Utilized: 0.00 MB
+Memory Efficiency: 0.00% of 336.00 GB (1.75 GB/core)
+WARNING: Efficiency statistics can only be obtained after the job has ended as seff tool is based on the accounting database data.

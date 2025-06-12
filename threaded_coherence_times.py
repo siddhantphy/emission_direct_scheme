@@ -18,31 +18,31 @@ bell_dc_pair_parameters = {"ent_prot":"double_click","F_prep":0.999,"p_DE":0.01,
 
 def simulate_one_coh_time(coh_time):
     # Non-photon-number-resolving
-    raw_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=100, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
+    raw_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=100, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
                                   T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    dc_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=101, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=dc_bell_pair_parameters,
+    dc_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=101, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=dc_bell_pair_parameters,
                                  T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    basic_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
+    basic_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
                                               T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    w_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=104, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
+    w_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=104, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
                                           T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    bell_sc_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
+    bell_sc_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_pair_parameters,
                                                 T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    bell_dc_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_dc_pair_parameters,
+    bell_dc_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, bell_pair_parameters=bell_dc_pair_parameters,
                                                 T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
 
     # Photon-number-resolving
-    pnr_raw_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=100, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+    pnr_raw_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=100, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
                                       T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    pnr_dc_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=101, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=dc_bell_pair_parameters,
+    pnr_dc_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=101, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=dc_bell_pair_parameters,
                                      T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    pnr_basic_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+    pnr_basic_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
                                                   T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    pnr_w_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=104, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+    pnr_w_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=104, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
                                               T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    pnr_bell_sc_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+    pnr_bell_sc_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
                                                     T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
-    pnr_bell_dc_distilled_state_qc = QuantumCircuit(1, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_dc_pair_parameters,
+    pnr_bell_dc_distilled_state_qc = QuantumCircuit(0, p_g=pg, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=True, bell_pair_parameters=bell_dc_pair_parameters,
                                                     T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
 
     return (

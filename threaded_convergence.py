@@ -18,7 +18,7 @@ shots = np.array([5, 10, 50, 100])
 
 def simulate_one_shot(shot):
     qc = QuantumCircuit(
-        1, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shot,
+        0, p_g=pg, network_noise_type=103, only_GHZ=True, shots_emission_direct=shot,
         bell_pair_parameters=bell_pair_parameters, T2n_idle=coh_time, T1n_idle=coh_time,
         T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time
     )

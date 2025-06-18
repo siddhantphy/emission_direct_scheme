@@ -1790,7 +1790,7 @@ class QuantumCircuit:
             
                 else:
                     return None
-                
+
             def distill_with_CiYiY(base_state,time_tracking):
                 # Module to perform the distillation with the CiYiY gates as required in this fusion-distillation protocol
                 # These are all local variables of the function below
@@ -1895,7 +1895,7 @@ class QuantumCircuit:
                 else:
                     return None
 
-            
+
             rho_fusion_protocol_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_fusion_protocol_final[:, :] = 0  # Fill the matrix with all zeros
             t_link = 0 # Time for the link generation
@@ -1915,27 +1915,64 @@ class QuantumCircuit:
                 time_mem = 0 # Time keeping for the memory qubits
                 total_time = 0 # Total time keeping for the entire protocol
 
+                ### Time step 0 ###
+
+                # Create the pair AC and distill with other AC
+                bell_AC = create_bell_link_and_distill_over_two_nodes([0,0,0])
+                if bell_AC is None:
+                    protocol_failed = True
+                    continue
+                bell_AC = bell_AC[0] # Extract the distilled density matrix
+
+                # At the same time create the elementary link BD
+                bell_BD = create_bell_link_and_distill_over_two_nodes([0,0,0])
+                if bell_BD is None:
+                    protocol_failed = True
+                    continue
+                bell_BD = bell_BD[0] # Extract the distilled density matrix
+
+                time_comm += bell_AC[1][0] # Time for the communication qubits
+                time_mem += bell_AC[1][1] # Time for the memory qubits
+                total_time += bell_AC[1][2] # Total time for the entire protocol
+
+                # Then distill AC with another AC
+                distilled_bell_AC = distill_with_CiYiY(bell_AC, [time_mem, time_comm, total_time])
+                if distilled_bell_AC is None:
+                    protocol_failed = True
+                    continue
+                distilled_bell_AC = distilled_bell_AC[0]
+
+                # In parallel, distill BD with another BD
+                distilled_bell_BD = distill_with_CiYiY(bell_BD, [time_mem, time_comm, total_time])
+                if distilled_bell_BD is None:
+                    protocol_failed = True
+                    continue
+                distilled_bell_BD = distilled_bell_BD[0]
+
+                time_comm += distilled_bell_AC[1][0]
+                time_mem += distilled_bell_AC[1][1]
+                total_time += distilled_bell_AC[1][2]
+
+                ### Time step 1 ###
+
                 # Create the pair AB and distill with other AB
-                bell_AB = create_bell_link_and_distill_over_two_nodes([0,0,0])
+                bell_AB = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
                 if bell_AB is None:
                     protocol_failed = True
                     continue
-                bell_AB = bell_AB[0] # Extract the distilled density matrix
+                bell_AB = bell_AB[0]
+
+                # At the same time create the elementary link CD
+                bell_CD = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
+                if bell_CD is None:
+                    protocol_failed = True
+                    continue
+                bell_CD = bell_CD[0]
+
                 time_comm += bell_AB[1][0] # Time for the communication qubits
                 time_mem += bell_AB[1][1] # Time for the memory qubits
                 total_time += bell_AB[1][2] # Total time for the entire protocol
 
-                # At the same time create the elementary link CD
-                bell_CD = create_bell_link_and_distill_over_two_nodes([0,0,0])
-                if bell_CD is None:
-                    protocol_failed = True
-                    continue
-                bell_CD = bell_CD[0] # Extract the distilled density matrix
-                time_comm += bell_CD[1][0] # Time for the communication qubits
-                time_mem += bell_CD[1][1] # Time for the memory qubits
-                total_time += bell_CD[1][2] # Total time for the entire protocol
-
-                
                 # Then distill AB with another AB
                 distilled_bell_AB = distill_with_CiYiY(bell_AB, [time_mem, time_comm, total_time])
                 if distilled_bell_AB is None:
@@ -1954,38 +1991,13 @@ class QuantumCircuit:
                 time_mem += distilled_bell_AB[1][1]
                 total_time += distilled_bell_AB[1][2]
 
-                # SWAP A and C to memory qubits to create link AC
+                # Apply decohrence on AC and BD due to new AB generation
 
-                bell_AC = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
-                if bell_AC is None:
-                    protocol_failed = True
-                    continue
-                bell_AC = bell_AC[0]
-                time_comm += bell_AC[1][0]
-                time_mem += bell_AC[1][1]
-                total_time += bell_AC[1][2]
+                # Fuse at A to create ACD
 
-                # Apply depolarizing noise for SWAP on qubits of A and C
+                # At the same time fuse at C to create ABCD
 
-                # Apply decoherence due to the SWAP gate
-
-                # Then distill AC with another AC
-                distilled_bell_AC = distill_with_CiYiY(bell_AC, [time_mem, time_comm, total_time])
-                if distilled_bell_AC is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_AC = distilled_bell_AC[0]
-                time_comm += distilled_bell_AC[1][0]
-                time_mem += distilled_bell_AC[1][1]
-                total_time += distilled_bell_AC[1][2]
-
-                # Apply decohrence on AB and CD due to new AC generation
-
-                # Fuse at C to create ACD
-
-                # Fuse at A to create ABCD
-
-                # Create BD with iYiY distillation
+                ### Time step 2 ###
 
                 # Distill ABCD with BD via ZZ
 

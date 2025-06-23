@@ -657,12 +657,12 @@ class QuantumCircuit:
                 single_click_bell_pair[3,3] = (-1 + alpha)/(-2 + 2*alpha*eta)
                 p_link_sc_bell = 2 * alpha * eta * (1 - alpha * eta)
             if self.photon_number_resolution is False:
-                single_click_bell_pair[0,0] = (2 - 2*alpha)/(4 + alpha*eta*(-3 + mu))
-                single_click_bell_pair[0,3] = (-2*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*(-1 + 2*labda)*np.sqrt(mu))/(4 + alpha*eta*(-3 + mu))
-                single_click_bell_pair[2,2] = (alpha*(4 + eta*(-3 + mu)))/(4 + alpha*eta*(-3 + mu))
-                single_click_bell_pair[3,0] = (-2*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*(-1 + 2*labda)*np.sqrt(mu))/(4 + alpha*eta*(-3 + mu))
-                single_click_bell_pair[3,3] = (2 - 2*alpha)/(4 + alpha*eta*(-3 + mu))
-                p_link_sc_bell = alpha * eta * (alpha * eta * (mu - 3) + 4) / 2
+                single_click_bell_pair[0,0] = (2 - 2*alpha)/(4 + alpha*eta*(-3 + mu**2))
+                single_click_bell_pair[0,3] = (-2*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*(-1 + 2*labda)*mu)/(4 + alpha*eta*(-3 + mu**2))
+                single_click_bell_pair[2,2] = 1 + (4*(-1 + alpha))/(4 + alpha*eta*(-3 + mu**2))
+                single_click_bell_pair[3,0] = (-2*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*(-1 + 2*labda)*mu)/(4 + alpha*eta*(-3 + mu**2))
+                single_click_bell_pair[3,3] = (2 - 2*alpha)/(4 + alpha*eta*(-3 + mu**2))
+                p_link_sc_bell = alpha * eta * (alpha * eta * (mu**2 - 3) + 4) / 2
 
             pg=4*pg/3 # Make the conversion from the definition of mathematica to the definition of the simulator for the depolarizing quantum channel
             alpha = 0.5 # Bias to the optimal performance of the double-click bell pairs
@@ -676,12 +676,12 @@ class QuantumCircuit:
                 p_link_dc_bell = alpha*eta**2*(2 - 2*pg*eta + pg**2*eta + alpha*(-2 + 2*pg + pg**2*(-2 + eta)*eta))
 
             if self.photon_number_resolution is False:
-                double_click_bell_pair[0,0] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[0,3] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[2,2] = (pg*(8 - 8*alpha + pg*(-4 + alpha*(8 + eta*(-3 + mu))))*(4 + eta*(-3 + mu)))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[3,0] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                p_link_dc_bell = (alpha*eta**2*(32 + alpha*(-32 + 32*pg + pg**2*eta*(8 + eta*(-3 + mu))*(-3 + mu)) + 8*pg*eta*(-3 + mu) - 4*pg**2*eta*(-3 + mu)))/16
+                double_click_bell_pair[0,0] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[0,3] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[2,2] = (pg*(4 + eta*(-3 + mu**2))*(8 - 8*alpha + pg*(-4 + alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[3,0] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                p_link_dc_bell = (alpha*eta**2*(32 + 8*pg*eta*(-3 + mu**2) - 4*pg**2*eta*(-3 + mu**2) + alpha*(-32 + 32*pg + pg**2*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))/16
             
             if bell_pair_protocol == "single_click":
                 bell_pair_state = single_click_bell_pair
@@ -1652,12 +1652,12 @@ class QuantumCircuit:
                 p_link_dc_bell = alpha*eta**2*(2 - 2*pg*eta + pg**2*eta + alpha*(-2 + 2*pg + pg**2*(-2 + eta)*eta))
 
             if self.photon_number_resolution is False:
-                double_click_bell_pair[0,0] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[0,3] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[2,2] = (pg*(8 - 8*alpha + pg*(-4 + alpha*(8 + eta*(-3 + mu))))*(4 + eta*(-3 + mu)))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[3,0] = (-16*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu)/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu)))))/(32 + alpha*(-32 + pg*(32 + pg*eta*(8 + eta*(-3 + mu))*(-3 + mu))) - 4*(-2 + pg)*pg*eta*(-3 + mu))
-                p_link_dc_bell = (alpha*eta**2*(32 + alpha*(-32 + 32*pg + pg**2*eta*(8 + eta*(-3 + mu))*(-3 + mu)) + 8*pg*eta*(-3 + mu) - 4*pg**2*eta*(-3 + mu)))/16
+                double_click_bell_pair[0,0] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[0,3] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[2,2] = (pg*(4 + eta*(-3 + mu**2))*(8 - 8*alpha + pg*(-4 + alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[3,0] = (8*(1 - 2*F_prep)**2*(1 - 2*p_DE)**4*(-1 + pg)**2*(-1 + alpha)*mu*(np.sqrt(1-mu) - np.sqrt(1+mu))*(np.sqrt(1-mu) + np.sqrt(1+mu)))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                double_click_bell_pair[3,3] = (2*(8 - 8*alpha + (-2 + pg)*pg*(4 - alpha*(8 + eta*(-3 + mu**2)))))/(32 - 4*(-2 + pg)*pg*eta*(-3 + mu**2) + alpha*(-32 + pg*(32 + pg*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))
+                p_link_dc_bell = (alpha*eta**2*(32 + 8*pg*eta*(-3 + mu**2) - 4*pg**2*eta*(-3 + mu**2) + alpha*(-32 + 32*pg + pg**2*eta*(-3 + mu**2)*(8 + eta*(-3 + mu**2)))))/16
 
 
 

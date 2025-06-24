@@ -1673,7 +1673,7 @@ class QuantumCircuit:
             def create_bell_link_and_distill_over_two_nodes(time_tracking):
                 # These are all local variables of the function
                 time_mem = time_tracking[0] # Time keeping for the memory qubits
-                time_comm = time_tracking[1] # Time keeping for the communication qubits
+                time_comm = 0 # Time keeping for the communication qubits
                 total_time = time_tracking[2] # Total time keeping for the entire protocol
 
                 # First we only model the creating two Bell-pairs and distilling one from another
@@ -1695,7 +1695,7 @@ class QuantumCircuit:
                         total_time += bell_dc_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
-                time_mem += 3*t_CX # Time for the SWAP operation
+                time_mem = 3*t_CX # Time for the SWAP operation
                 total_time += 3*t_CX # Total time for the SWAP operation added
 
                 # Gate noise on the raw-2 qubits
@@ -1717,7 +1717,7 @@ class QuantumCircuit:
 
                 time_mem += attempts_bell_2 * bell_dc_t_link # Time for the successful link generation
                 total_time += attempts_bell_2 * bell_dc_t_link # Total time for the successful link generation added
-                time_comm += bell_dc_t_link # Time for the successful link generation on the communication qubits, one attempt time added
+                time_comm = bell_dc_t_link # Time for the successful link generation on the communication qubits, one attempt time added
 
                 # Then decoherence noise due to the second link generation
                 pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_link)).on_each(qubits_1[i]) for i in range(2)]
@@ -1796,7 +1796,7 @@ class QuantumCircuit:
                 # These are all local variables of the function below
                 # These are all local variables of the function
                 time_mem = time_tracking[0] # Time keeping for the memory qubits
-                time_comm = time_tracking[1] # Time keeping for the communication qubits
+                time_comm = 0 # Time keeping for the communication qubits
                 total_time = time_tracking[2] # Total time keeping for the entire protocol
 
                 qubits_2 = [cirq.LineQubit(i) for i in range(2)]  # Qubits for W-state, newly generated on the communication qubits

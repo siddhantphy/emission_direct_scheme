@@ -1942,66 +1942,81 @@ class QuantumCircuit:
                     continue
                 distilled_bell_AC = distilled_bell_AC[0]
 
-                # In parallel, distill BD with another BD
-                distilled_bell_BD = distill_with_CiYiY(bell_BD, [time_mem, time_comm, total_time])
-                if distilled_bell_BD is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_BD = distilled_bell_BD[0]
-
-                time_comm += distilled_bell_AC[1][0]
-                time_mem += distilled_bell_AC[1][1]
-                total_time += distilled_bell_AC[1][2]
-
                 ### Time step 1 ###
 
-                # Create the pair AB and distill with other AB
+                # Create the pair CD and distill with other CD
+                bell_CD = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
+                if bell_CD is None:
+                    protocol_failed = True
+                    continue
+                bell_CD = bell_CD[0] # At mem2
+
+                # distill CD with another CD
+                distilled_bell_CD = distill_with_CiYiY(bell_CD, [time_mem, time_comm, total_time])
+                if distilled_bell_CD is None:
+                    protocol_failed = True
+                    continue
+                distilled_bell_CD = distilled_bell_CD[0] # At mem2
+
+                # Fuse at C to create ACD
+                simulator = cirq.DensityMatrixSimulator()
+                combined_density_matrix = np.kron(distilled_bell_AC, distilled_bell_CD)
+                gate_cx = [cirq.CNOT(cirq.LineQubit(1), cirq.LineQubit(2))]
+                meas_z = [cirq.measure(cirq.LineQubit(2), key=f'm')]
+                circuit = cirq.Circuit(gate_cx + meas_z)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                final_density_matrix = result.final_density_matrix
+                post_selected_matrix = final_density_matrix
+                p_fuse = np.trace(post_selected_matrix)
+                post_selected_matrix /= p_fuse
+                rho_fusion_ACD = partial_trace_numpy(post_selected_matrix, [0,1,3], dims=[2])
+                rho_fusion_ACD = rho_fusion_ACD/np.trace(rho_fusion_ACD)
+
+                # At the same time create the elementary link AB
                 bell_AB = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
                 if bell_AB is None:
                     protocol_failed = True
                     continue
                 bell_AB = bell_AB[0]
 
-                # At the same time create the elementary link CD
-                bell_CD = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
-                if bell_CD is None:
-                    protocol_failed = True
-                    continue
-                bell_CD = bell_CD[0]
-
-                time_comm += bell_AB[1][0] # Time for the communication qubits
-                time_mem += bell_AB[1][1] # Time for the memory qubits
-                total_time += bell_AB[1][2] # Total time for the entire protocol
-
-                # Then distill AB with another AB
+                # distill AB with another AB
                 distilled_bell_AB = distill_with_CiYiY(bell_AB, [time_mem, time_comm, total_time])
                 if distilled_bell_AB is None:
                     protocol_failed = True
                     continue
                 distilled_bell_AB = distilled_bell_AB[0]
 
-                # In parallel, distill CD with another CD
-                distilled_bell_CD = distill_with_CiYiY(bell_CD, [time_mem, time_comm, total_time])
-                if distilled_bell_CD is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_CD = distilled_bell_CD[0]
-
-                time_comm += distilled_bell_AB[1][0]
-                time_mem += distilled_bell_AB[1][1]
-                total_time += distilled_bell_AB[1][2]
-
-                # Apply decohrence on AC and BD due to new AB generation
-
-                # Fuse at A to create ACD
-
-                # At the same time fuse at C to create ABCD
+                # Fuse at A to create ABCD
+                simulator = cirq.DensityMatrixSimulator()
+                combined_density_matrix = np.kron(rho_fusion_ACD, distilled_bell_AB)
+                gate_cx = [cirq.CNOT(cirq.LineQubit(0), cirq.LineQubit(3))]
+                meas_z = [cirq.measure(cirq.LineQubit(4), key=f'm')]
+                circuit = cirq.Circuit(gate_cx + meas_z)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                final_density_matrix = result.final_density_matrix
+                post_selected_matrix = final_density_matrix
+                p_fuse = np.trace(post_selected_matrix)
+                post_selected_matrix /= p_fuse
+                rho_fusion_ABCD = partial_trace_numpy(post_selected_matrix, [0,1,2,4], dims=[2])
+                rho_fusion_ABCD = rho_fusion_ABCD/np.trace(rho_fusion_ABCD)
 
                 ### Time step 2 ###
 
                 # Distill ABCD with BD via ZZ
+                simulator = cirq.DensityMatrixSimulator()
+                combined_density_matrix = np.kron(rho_fusion_ABCD, bell_BD)
+                gate_cz = [cirq.CZ(cirq.LineQubit(1), cirq.LineQubit(4)), cirq.CZ(cirq.LineQubit(3), cirq.LineQubit(5))]
+                meas_z = [cirq.measure(cirq.LineQubit(4), cirq.LineQubit(5), key=f'm')]
+                circuit = cirq.Circuit(gate_cz + meas_z)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                final_density_matrix = result.final_density_matrix
+                post_selected_matrix = final_density_matrix
+                p_fuse = np.trace(post_selected_matrix)
+                post_selected_matrix /= p_fuse
+                rho_distilled_ABCD = partial_trace_numpy(post_selected_matrix, [0,1,2,3], dims=[2, 2])
+                rho_distilled_ABCD = rho_distilled_ABCD/np.trace(rho_distilled_ABCD)
 
-                rho_fusion_protocol_final += distilled_bell_AB # Add the current density matrix to the final density matrix
+                rho_fusion_protocol_final = rho_distilled_ABCD # Add the current density matrix to the final density matrix
 
                 
                 current_t_link = total_time

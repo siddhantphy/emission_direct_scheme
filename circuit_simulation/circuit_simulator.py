@@ -2112,6 +2112,487 @@ class QuantumCircuit:
             print("#################################################")
             return noisy_density_matrix        
 
+        if network_noise_type == 107:
+            # W-distill to raw protocol
+            mu = bell_pair_parameters['mu']
+            F_prep = bell_pair_parameters['F_prep']
+            labda = bell_pair_parameters['lambda']
+            p_DE = bell_pair_parameters['p_DE']
+            eta = bell_pair_parameters['eta']
+            alpha = bell_pair_parameters['alpha']
+            if self.alpha_distill is None:
+                self.alpha_distill = bell_pair_parameters['alpha'] # Use alpha_distill = alpha if not explicitly stated as the default value
+
+            weight = 4
+            target_GHZ_state = sp.lil_matrix((2**weight, 2**weight))
+            target_GHZ_state[0, 0] = 0.5
+            target_GHZ_state[0, 2**weight-1] = 0.5
+            target_GHZ_state[2**weight-1, 0] = 0.5
+            target_GHZ_state[2**weight-1, 2**weight-1] = 0.5
+            
+            # Target W-State
+            target_w_state = sp.lil_matrix((2**weight, 2**weight), dtype=complex)
+            indices = [1,2,4,8]
+            for i in indices:
+                for j in indices:
+                    target_w_state[i, j] = 0.25
+            
+            w_state_1 = np.zeros((2**weight, 2**weight), dtype=complex)
+            if self.photon_number_resolution is True:
+                w_state_1[1,1] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_1[1,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[1,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[1,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[2,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[2,2] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_1[2,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[2,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[3,3] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[3,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[3,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[3,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[3,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[4,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[4,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[4,4] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_1[4,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[5,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[5,5] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[5,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[5,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[5,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[6,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[6,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[6,6] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[6,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[6,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[7,7] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_1[7,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[7,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[7,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[8,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[8,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[8,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[8,8] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_1[9,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[9,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[9,9] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[9,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[9,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[10,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[10,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[10,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[10,10] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[10,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[11,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[11,11] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_1[11,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[11,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[12,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[12,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[12,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[12,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[12,12] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_1[13,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[13,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[13,13] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_1[13,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[14,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[14,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[14,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_1[14,14] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_1[15,15] = (alpha**3*(-1 + eta)**3)/(-1 + alpha*eta)**3
+                p_link_w_1 = -4*alpha*eta*(-1 + alpha*eta)**3
+
+            elif self.photon_number_resolution is False:
+                w_state_1[1,1] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[1,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[1,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[1,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[2,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[2,2] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[2,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[2,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[3,3] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[3,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[3,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[3,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[3,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[4,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[4,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[4,4] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[4,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[5,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[5,5] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[5,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[5,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[5,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[6,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[6,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[6,6] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[6,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[6,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[7,7] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[7,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[7,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[7,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[8,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[8,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[8,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[8,8] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[9,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[9,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[9,9] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[9,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[9,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[10,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[10,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[10,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[10,10] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[10,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[11,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[11,11] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[11,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[11,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[12,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[12,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[12,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[12,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[12,12] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[13,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[13,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[13,13] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[13,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[14,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[14,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[14,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[14,14] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_1[15,15] = (alpha**3*(256 + eta*(-768 + eta*(784 - 271*eta + 6*(8 - 7*eta)*mu**2 + 8*(4 - 3*eta)*mu**3 + 9*eta*mu**4))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+
+                p_link_w_1 = (alpha*eta*(256 - 768*alpha*eta + 16*alpha**2*eta**2*(49 + 3*mu**2 + 2*mu**3) + alpha**3*eta**3*(-271 - 42*mu**2 - 24*mu**3 + 9*mu**4)))/64
+            
+            alpha = self.alpha_distill
+            w_state_2 = np.zeros((2**weight, 2**weight), dtype=complex)
+            if self.photon_number_resolution is True:
+                w_state_2[1,1] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_2[1,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[1,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[1,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[2,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[2,2] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_2[2,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[2,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[3,3] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[3,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[3,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[3,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[3,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[4,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[4,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[4,4] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_2[4,8] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[5,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[5,5] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[5,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[5,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[5,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[6,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[6,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[6,6] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[6,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[6,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[7,7] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_2[7,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[7,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[7,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[8,1] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[8,2] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[8,4] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[8,8] = (-1 + alpha)**3/(4*(-1 + alpha*eta)**3)
+                w_state_2[9,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[9,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[9,9] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[9,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[9,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[10,3] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[10,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[10,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[10,10] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[10,12] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[11,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[11,11] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_2[11,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[11,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[12,5] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[12,6] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[12,9] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[12,10] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[12,12] = ((-1 + alpha)**2*alpha*(-1 + eta))/(2*(-1 + alpha*eta)**3)
+                w_state_2[13,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[13,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[13,13] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_2[13,14] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[14,7] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[14,11] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[14,13] = ((1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*(-1 + eta)**2*mu)/(4*(-1 + alpha*eta)**3)
+                w_state_2[14,14] = (3*(-1 + alpha)*alpha**2*(-1 + eta)**2)/(4*(-1 + alpha*eta)**3)
+                w_state_2[15,15] = (alpha**3*(-1 + eta)**3)/(-1 + alpha*eta)**3
+                p_link_w_2 = -4*alpha*eta*(-1 + alpha*eta)**3
+
+            elif self.photon_number_resolution is False:
+                w_state_2[1,1] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[1,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[1,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[1,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[2,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[2,2] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[2,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[2,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[3,3] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[3,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[3,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[3,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[3,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[4,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[4,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[4,4] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[4,8] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[5,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[5,5] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[5,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[5,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[5,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[6,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[6,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[6,6] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[6,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[6,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[7,7] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[7,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[7,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[7,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[8,1] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[8,2] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[8,4] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**3*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[8,8] = (-64*(-1 + alpha)**3)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[9,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[9,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[9,9] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[9,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[9,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[10,3] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[10,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[10,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[10,10] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[10,12] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[11,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[11,11] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[11,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[11,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[12,5] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[12,6] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[12,9] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[12,10] = (-64*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)**2*alpha*(-1 + eta)*mu)/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[12,12] = (-128*(-1 + alpha)**2*alpha*(-1 + eta))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[13,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[13,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[13,13] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[13,14] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[14,7] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[14,11] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[14,13] = (-4*(1 - 2*F_prep)**2*(1 - 2*p_DE)**2*(-1 + alpha)*alpha**2*mu*(16 + eta*(-32 + eta*(17 + mu*(2 + 3*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[14,14] = (-4*(-1 + alpha)*alpha**2*(48 + eta*(-96 + eta*(49 + mu**2*(3 + 2*mu)))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+                w_state_2[15,15] = (alpha**3*(256 + eta*(-768 + eta*(784 - 271*eta + 6*(8 - 7*eta)*mu**2 + 8*(4 - 3*eta)*mu**3 + 9*eta*mu**4))))/(256 + alpha*eta*(-768 + alpha*eta*(16*(49 + mu**2*(3 + 2*mu)) + alpha*eta*(-271 + 3*mu**2*(-14 + mu*(-8 + 3*mu))))))
+
+                p_link_w_2 = (alpha*eta*(256 - 768*alpha*eta + 16*alpha**2*eta**2*(49 + 3*mu**2 + 2*mu**3) + alpha**3*eta**3*(-271 - 42*mu**2 - 24*mu**3 + 9*mu**4)))/64
+            
+            print("#################################################")
+            print(f"*** W state fidelity of the W state-1 is {fidelity(w_state_1, target_w_state)}.***")
+            print(f"*** W state fidelity of the W state-2 is {fidelity(w_state_2, target_w_state)}.***")
+
+            rho_emitters_w_to_GHZ_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
+            rho_emitters_w_to_GHZ_distilled_final[:, :] = 0  # Fill the matrix with all zeros
+            t_link = [] # Time for the link generation
+            f_link = [] # Fidelity average
+            p_link = [] # Probability of link generation
+            successful_shots = 0 # Number of successful shots
+
+            if self.only_GHZ is True: # If we only want to model and analyse the GHZ state then we repeat the shots, else we repeat the entire stabilizer protocol
+                shots = self.shots_emission_direct
+            else:
+                shots = 1
+            for shot in range(shots):
+                w_t_link = 1e-5 # Time for one link generation attempt
+                time_comm = 0 # Time keeping for the communication qubits
+                time_mem = 0 # Time keeping for the memory qubits
+                total_time = 0 # Total time keeping for the entire protocol
+
+                t_CX = 0.0005 # Time for the CNOT gate
+                t_cH = 1e-7 # Time for hadamard gate on the communication qubit
+                t_mH = 0.0005 # Time for Hadamard gate on the memory qubits
+
+                qubits_2 = [cirq.LineQubit(i) for i in range(4)]  # Qubits for the distilling W-state, newly generated on the communication qubits
+                qubits_1 = [cirq.LineQubit(i + 4) for i in range(4)]  # Qubits for the distilled W-state, sent to the memory qubits, generated before
+
+                simulator = cirq.DensityMatrixSimulator()
+                combined_density_matrix = np.kron(w_state_2,w_state_1)
+
+                # Create a Direct Raw state first
+                # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
+                attempts_w_1 = 0 # Number of attempts to create the link
+                successes = 0 # Number of successful attempts to create the link, we require one successful event
+                while successes < 1:
+                    attempts_w_1 += 1
+                    if np.random.rand() < p_link_w_1: # If the link generation is successful
+                        successes += 1 # Increase the number of successful attempts
+                        attempts_w_1 += 1 # Increase the number of attempts for the first link generation
+                        total_time += w_t_link # Time for the successful link generation 
+
+                # SWAP it to the memory qubits
+                time_mem += 3*t_CX # Time for the SWAP operation
+                total_time += 3*t_CX # Total time for the SWAP operation added
+
+                # Gate noise on the raw-2 qubits
+                noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
+                # Decoherence after the SWAP gates, before the CNOT gates
+                pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_idle)).on_each(qubits_1[i]) for i in range(4)]
+                gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_idle)).on_each(qubits_1[i]) for i in range(4)]
+
+                #Generate the second Raw state
+                attempts_w_2 = 0 # Number of attempts to create the link
+                successes = 0 # Number of successful attempts to create the link, we require one successful event
+                while successes < 1:
+                    attempts_w_2 += 1
+                    if np.random.rand() < p_link_w_2: # If the link generation is successful
+                        successes += 1 # Increase the number of successful attempts
+                        attempts_w_2 += 1 # Increase the number of attempts for the first link generation
+                        total_time += w_t_link # Time for the successful link generation
+
+                time_mem += attempts_w_2 * w_t_link # Time for the successful link generation
+                total_time += attempts_w_2 * w_t_link # Total time for the successful link generation added
+                time_comm += w_t_link # Time for the successful link generation on the communication qubits, one attempt time added
+
+                # Then decoherence noise due to the second link generation
+                pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
+                gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_link)).on_each(qubits_1[i]) for i in range(4)]
+                
+                # Apply the Z-rotations to both W-states
+                Z_rot_1 = [cirq.Z(qubits_1[0])]
+                Z_rot_2 = [cirq.Z(qubits_2[1])]
+                
+                # Apply the Hadamard operations to all the qubits
+                Hmd = [cirq.H(qubits_1[i]) for i in range(4)] + [cirq.H(qubits_2[i]) for i in range(4)]
+                
+                # Apply collective noise due to these local gates
+
+                # Apply the 4-CNOT gates in parallel within all the nodes
+                cnots = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
+
+                time_comm += t_CX # Time for the CNOT gates
+                time_mem += t_CX # Time for the CNOT gates
+                total_time += t_CX # Total time for the CNOT gates added
+
+                # Apply depolarizing noise to the qubits involved in the CNOT gates
+                depolarizing_noise = [apply_correlated_two_qubit_noise_channel(pg, [qubits_1[i], qubits_2[i]]) for i in range(4)]
+
+                # Decoherence after the CNOT gates
+                # First on the memory qubits which suffer twice the duration of the two-qubit gates
+                pd_channel_after_CNOTs_m = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
+                gad_channel_after_CNOTs_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_link)).on_each(qubits_1[i]) for i in range(4)]
+                # The other raw state suffers this noise only for the duration of the CNOT gates, these are the communication qubits
+                pd_channel_after_CNOTs_c = [cirq.PhaseDampingChannel(1-np.exp(-time_comm/self.T2e_idle)).on_each(qubits_2[i]) for i in range(4)]
+                gad_channel_after_CNOTs_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_comm/self.T1e_idle)).on_each(qubits_2[i]) for i in range(4)]
+
+                # Finally, apply the noisy measurement noise on the qubits, here the measurement noise is intrinsically taken to be equal to the gate noise
+                measurement_noise = [cirq.BitFlipChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
+
+
+                circuit = cirq.Circuit(
+                    noise_SWAP + pd_channel_after_SWAP + gad_channel_after_SWAP   +
+                    pd_channel_during_link + gad_channel_during_link+ Z_rot_1 + Z_rot_2 + Hmd + cnots+ depolarizing_noise + pd_channel_after_CNOTs_m +
+                    gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c +
+                    measurement_noise)
+                
+                # Add measurements on communication qubits
+                for i in range(4):
+                    circuit.append(cirq.measure(qubits_2[i], key=f'm{i}'))
+
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                # Extract the final density matrix from the simulation result
+                final_density_matrix = result.final_density_matrix
+
+                if (result.measurements['m0'][0] == 0 and result.measurements['m1'][0] == 0 and result.measurements['m2'][0] == 0 and result.measurements['m3'][0] == 0) or (result.measurements['m0'][0] == 1 and result.measurements['m1'][0] == 1 and result.measurements['m2'][0] == 1 and result.measurements['m3'][0] == 1):
+                    # If the measurement results are all |0>, we can proceed with the distillation
+                    post_selected_matrix = final_density_matrix
+                    p_distill = np.trace(post_selected_matrix)
+                    successful_shots += 1 # Increase the number of successful shots
+                    # Normalize the post-selected matrix
+                    post_selected_matrix /= p_distill
+
+                    # Partial trace over qubits_2 (qubits 4 to 7)
+                    rho_emitters_w_to_GHZ_distilled = partial_trace_numpy(post_selected_matrix, [4,5,6,7], dims=[2] * 8)  # Measured qubits traced out
+                    rho_emitters_w_to_GHZ_distilled = rho_emitters_w_to_GHZ_distilled/np.trace(rho_emitters_w_to_GHZ_distilled)  # Normalize the density matrix
+
+                    
+                    # Apply the final noisy SWAP operation
+                    qubits_1 = [cirq.LineQubit(i) for i in range(4)]
+
+                    # Apply depolarizing noise to the qubits involved in the SWAP gates, beause the measurements are done only on the communication qubits
+                    noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+
+                    time_comm += 3*t_CX # Time for the SWAP operation
+                    total_time += 3*t_CX # Total time for the SWAP operation added
+
+                    # Decoherence after the SWAP gates after the measurement
+                    pd_channel_after_SWAP_c = [cirq.PhaseDampingChannel(1-np.exp(-time_comm/self.T2e_idle)).on_each(qubits_1[i]) for i in range(4)]
+                    gad_channel_after_SWAP_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_comm/self.T1e_idle)).on_each(qubits_1[i]) for i in range(4)]
+                    
+                    # Post Hadamard correction to all qubits
+                    Hmd = [cirq.H(qubits_1[i]) for i in range(4)]
+                    
+                    # Apply noise to the qubits
+                    noise_Hmd = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+                    
+                    # Apply the X correction to convert to phi_plus_4 GHZ state, note that this is just a virtual corretion and no noise is applied for this
+                    x_correction = [cirq.X(qubits_1[i]) for i in range(2)]
+
+                    circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c +
+                                           Hmd + noise_Hmd + x_correction)
+                    rho_emitters_w_to_GHZ_distilled_current = simulator.simulate(circuit, initial_state=rho_emitters_w_to_GHZ_distilled).final_density_matrix
+
+                    rho_emitters_w_to_GHZ_distilled_current = sp.lil_matrix(rho_emitters_w_to_GHZ_distilled_current)
+
+                    current_t_link = total_time
+                    t_link.append(current_t_link) # Total time for the link generation
+
+                    current_f_link = fidelity(rho_emitters_w_to_GHZ_distilled_current, target_GHZ_state)
+                    f_link.append(current_f_link) # Fidelity average
+
+                    current_p_link = np.real(1/(attempts_w_1+attempts_w_2) * p_distill)
+                    p_link.append(current_p_link)
+
+                    rho_emitters_w_to_GHZ_distilled_final += rho_emitters_w_to_GHZ_distilled_current # Add the current density matrix to the final density matrix
+                else:
+                    pass
+
+            if successful_shots != 0:
+                rho_emitters_w_to_GHZ_distilled_final /= successful_shots # Normalize the final density matrix
+                self.t_link = np.mean(t_link) # Average time for the link generation
+                self.F_link = np.mean(f_link) # Average fidelity
+                self.p_link = np.mean(p_link) # Average probability
+                self.emission_direct_statistics = {"p_link": t_link, "F_link": f_link, "t_link": t_link}
+            if successful_shots == 0:
+                self.t_link = np.inf
+                self.F_link = 0
+                self.p_link = 0
+                rho_emitters_w_to_GHZ_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters if the attempts fail!
+
+            print(f"*** GHZ state fidelity of distill W to GHZ state protocol state is {self.F_link}.***")
+            print(f"*** Success rate of distill W to GHZ state protocol state is {self.p_link}.***")
+            print("#################################################")
+
+            return rho_emitters_w_to_GHZ_distilled_final
 
         if network_noise_type in range(10, 22):
             data = np.load('circuit_simulation/states/non_emission_based_99_fidelity_Bell_states.npy', allow_pickle=True)

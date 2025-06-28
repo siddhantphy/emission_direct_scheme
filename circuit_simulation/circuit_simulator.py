@@ -2477,6 +2477,7 @@ class QuantumCircuit:
                 pd_channel_during_link = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_link)).on_each(qubits_1[i]) for i in range(4)]
                 gad_channel_during_link = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_link)).on_each(qubits_1[i]) for i in range(4)]
                 
+                
                 # Apply the Z-rotations to both W-states
                 Z_rot_1 = [cirq.Z(qubits_1[0])]
                 Z_rot_2 = [cirq.Z(qubits_2[1])]
@@ -2485,6 +2486,18 @@ class QuantumCircuit:
                 Hmd = [cirq.H(qubits_1[i]) for i in range(4)] + [cirq.H(qubits_2[i]) for i in range(4)]
                 
                 # Apply collective noise due to these local gates
+                rotation_noise_1 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
+                rotation_noise_2 = [cirq.DepolarizingChannel(p=pg).on_each(qubits_2[i]) for i in range(4)]
+                
+                time_comm += 2 * t_mH # Time for the overall single qubit gates, include gates on memory qubits
+                time_mem += 2 * t_mH # Time for the overall single qubit gates, include gates on memory qubits
+                total_time += 2 * t_mH # Total time for the overall single qubit gates, include gates on memory qubits
+                
+                # Decoherence noise due to these local rotations
+                pd_channel_after_rotations_m = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_idle)).on_each(qubits_1[i]) for i in range(4)]
+                gad_channel_after_rotations_m = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_idle)).on_each(qubits_1[i]) for i in range(4)]
+                pd_channel_after_rotations_c = [cirq.PhaseDampingChannel(1-np.exp(-time_comm/self.T2e_idle)).on_each(qubits_2[i]) for i in range(4)]
+                gad_channel_after_rotations_c = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_comm/self.T1e_idle)).on_each(qubits_2[i]) for i in range(4)]
 
                 # Apply the 4-CNOT gates in parallel within all the nodes
                 cnots = [cirq.CNOT(qubits_1[i], qubits_2[i]) for i in range(4)] # All these CNOT gates are parallel on the architecture
@@ -2510,7 +2523,7 @@ class QuantumCircuit:
 
                 circuit = cirq.Circuit(
                     noise_SWAP + pd_channel_after_SWAP + gad_channel_after_SWAP   +
-                    pd_channel_during_link + gad_channel_during_link+ Z_rot_1 + Z_rot_2 + Hmd + cnots+ depolarizing_noise + pd_channel_after_CNOTs_m +
+                    pd_channel_during_link + gad_channel_during_link+ Z_rot_1 + Z_rot_2 + Hmd + rotation_noise_1 + rotation_noise_2 + pd_channel_after_rotations_m + gad_channel_after_rotations_m + pd_channel_after_rotations_c + gad_channel_after_rotations_c + cnots+ depolarizing_noise + pd_channel_after_CNOTs_m +
                     gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c +
                     measurement_noise)
                 
@@ -2533,7 +2546,6 @@ class QuantumCircuit:
                     # Partial trace over qubits_2 (qubits 4 to 7)
                     rho_emitters_w_to_GHZ_distilled = partial_trace_numpy(post_selected_matrix, [4,5,6,7], dims=[2] * 8)  # Measured qubits traced out
                     rho_emitters_w_to_GHZ_distilled = rho_emitters_w_to_GHZ_distilled/np.trace(rho_emitters_w_to_GHZ_distilled)  # Normalize the density matrix
-
                     
                     # Apply the final noisy SWAP operation
                     qubits_1 = [cirq.LineQubit(i) for i in range(4)]
@@ -2551,7 +2563,7 @@ class QuantumCircuit:
                     # Post Hadamard correction to all qubits
                     Hmd = [cirq.H(qubits_1[i]) for i in range(4)]
                     
-                    # Apply noise to the qubits
+                    # Apply noise to the qubits, only gate noise! Ignore decoherence as negligible for single qubit gates on communication qubits!
                     noise_Hmd = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
                     
                     # Apply the X correction to convert to phi_plus_4 GHZ state, note that this is just a virtual corretion and no noise is applied for this

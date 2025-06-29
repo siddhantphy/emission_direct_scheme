@@ -8,6 +8,7 @@ import os
 timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 shots = 1
+pnr = False
 alpha = 0.05
 pg = 0.001
 
@@ -63,7 +64,7 @@ def simulate_one(params):
             "W to GHZ DC": 106
         }[protocol]
         qc = QuantumCircuit(
-            0, p_g=pg, network_noise_type=network_noise_type, only_GHZ=True, shots_emission_direct=shots,
+            0, p_g=pg, network_noise_type=network_noise_type, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=pnr,
             bell_pair_parameters=bell_params,
             T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time,
             T2e_idle=coh_time, T1e_idle=coh_time
@@ -101,6 +102,6 @@ if __name__ == "__main__":
         "success_rate_data": {k: v.tolist() for k, v in success_rate_data.items()},
         "statistics_data": {k: v for k, v in statistics_data.items()}
     }
-    heatmap_data_file = rf'.\output_data\simulation_data\{timestamp}_heatmap_hardware_coherence_parameters_shots_{shots}_alpha_{alpha}_pg_{pg}.json'
+    heatmap_data_file = rf'.\output_data\simulation_data\{timestamp}_heatmap_hardware_coherence_parameters_shots_{shots}_pnr_{pnr}_alpha_{alpha}_pg_{pg}.json'
     with open(heatmap_data_file, 'w') as f:
         json.dump(results_dict, f, indent=2)

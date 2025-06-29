@@ -8,6 +8,7 @@ import os
 timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 shots = 4
+pnr = True
 coh_time = 10
 pg = 0.001
 
@@ -37,7 +38,7 @@ def simulate_one(params):
     statistics = []
     for _, network_noise_type in protocols:
         qc = QuantumCircuit(
-            1, p_g=pg, only_GHZ=True, shots_emission_direct=shots,
+            1, p_g=pg, only_GHZ=True, shots_emission_direct=shots, photon_number_resolution=pnr,
             network_noise_type=network_noise_type, alpha_distill=alpha_distill,
             bell_pair_parameters=bell_pair_parameters,
             T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time,
@@ -90,6 +91,6 @@ if __name__ == "__main__":
         "statistics_w_to_GHZ": statistics_data["w_to_GHZ"],  
     }
     
-    bright_state_raw_distillation_heatmap = rf'.\output_data\simulation_data\{timestamp}_data_bright_state_raw_distillation_heatmap_shots_{shots}_Fprep_{bell_pair_parameters["F_prep"]}_pDE_{bell_pair_parameters["p_DE"]}_mu_{bell_pair_parameters["mu"]}_cohtime_{coh_time}_pg_{pg}.json'
+    bright_state_raw_distillation_heatmap = rf'.\output_data\simulation_data\{timestamp}_data_bright_state_raw_distillation_heatmap_shots_{shots}_pnr_{pnr}_Fprep_{bell_pair_parameters["F_prep"]}_pDE_{bell_pair_parameters["p_DE"]}_mu_{bell_pair_parameters["mu"]}_cohtime_{coh_time}_pg_{pg}.json'
     with open(bright_state_raw_distillation_heatmap, 'w') as f:
         json.dump(results_dict, f, indent=4)

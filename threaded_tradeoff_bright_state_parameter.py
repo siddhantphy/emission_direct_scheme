@@ -11,13 +11,14 @@ shots = 4
 coh_time = 10
 pg = 0.001
 
-alpha_range = np.arange(0.05, 0.525, 0.0125)
-alpha_distill_range = np.arange(0.05, 0.525, 0.0125)
+alpha_range = np.arange(0.05, 0.525, 0.125)
+alpha_distill_range = np.arange(0.05, 0.525, 0.125)
 
 protocols = [
     ("bell_sc", 102),
     ("basic", 103),
-    ("w", 104)
+    ("w", 104),
+    ("w_to_GHZ", 107) 
 ]
 
 def simulate_one(params):
@@ -78,12 +79,15 @@ if __name__ == "__main__":
         "infidelity_bell_sc": infidelity_data["bell_sc"].tolist(),
         "infidelity_basic": infidelity_data["basic"].tolist(),
         "infidelity_w": infidelity_data["w"].tolist(),
+        "infidelity_w_to_GHZ": infidelity_data["w_to_GHZ"].tolist(),  
         "success_bell_sc": success_data["bell_sc"].tolist(),
         "success_basic": success_data["basic"].tolist(),
         "success_w": success_data["w"].tolist(),
+        "success_w_to_GHZ": success_data["w_to_GHZ"].tolist(),  
         "statistics_bell_sc": statistics_data["bell_sc"],
         "statistics_basic": statistics_data["basic"],
         "statistics_w": statistics_data["w"],
+        "statistics_w_to_GHZ": statistics_data["w_to_GHZ"],  
     }
     
     bright_state_raw_distillation_heatmap = rf'.\output_data\simulation_data\{timestamp}_data_bright_state_raw_distillation_heatmap_shots_{shots}_Fprep_{bell_pair_parameters["F_prep"]}_pDE_{bell_pair_parameters["p_DE"]}_mu_{bell_pair_parameters["mu"]}_cohtime_{coh_time}_pg_{pg}.json'

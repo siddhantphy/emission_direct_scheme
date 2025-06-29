@@ -36,6 +36,10 @@ def simulate_one_alpha(alpha):
     bell_dc_pair_parameters["ent_prot"] = "double_click"
     bell_dc_distilled_state_qc = QuantumCircuit(0, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, p_g=pg, bell_pair_parameters=bell_dc_pair_parameters,
                                                 T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
+    w_to_GHZ_distilled_state_qc = QuantumCircuit(0, network_noise_type=107, only_GHZ=True, shots_emission_direct=shots, p_g=pg, bell_pair_parameters=bell_pair_parameters,
+                                                 T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
+    w_to_GHZ_dc_state_qc = QuantumCircuit(0, network_noise_type=106, only_GHZ=True, shots_emission_direct=shots, p_g=pg, bell_pair_parameters=bell_pair_parameters,
+                                          T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
 
     # Photon-number-resolving
     pnr_raw_state_qc = QuantumCircuit(0, network_noise_type=100, only_GHZ=True, shots_emission_direct=shots, p_g=pg, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
@@ -52,6 +56,10 @@ def simulate_one_alpha(alpha):
     pnr_bell_dc_pair_parameters["ent_prot"] = "double_click"
     pnr_bell_dc_distilled_state_qc = QuantumCircuit(0, network_noise_type=102, only_GHZ=True, shots_emission_direct=shots, p_g=pg, photon_number_resolution=True, bell_pair_parameters=pnr_bell_dc_pair_parameters,
                                                     T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
+    pnr_w_to_GHZ_distilled_state_qc = QuantumCircuit(0, network_noise_type=107, only_GHZ=True, shots_emission_direct=shots, p_g=pg, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+                                                     T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
+    pnr_w_to_GHZ_dc_state_qc = QuantumCircuit(0, network_noise_type=106, only_GHZ=True, shots_emission_direct=shots, p_g=pg, photon_number_resolution=True, bell_pair_parameters=bell_pair_parameters,
+                                              T2n_idle=coh_time, T1n_idle=coh_time, T2n_link=coh_time, T1n_link=coh_time, T2e_idle=coh_time, T1e_idle=coh_time)
 
     return (
         alpha,
@@ -61,12 +69,16 @@ def simulate_one_alpha(alpha):
         w_distilled_state_qc.p_link, 1-w_distilled_state_qc.F_link, w_distilled_state_qc.emission_direct_statistics,
         bell_sc_distilled_state_qc.p_link, 1-bell_sc_distilled_state_qc.F_link, bell_sc_distilled_state_qc.emission_direct_statistics,
         bell_dc_distilled_state_qc.p_link, 1-bell_dc_distilled_state_qc.F_link, bell_dc_distilled_state_qc.emission_direct_statistics,
+        w_to_GHZ_distilled_state_qc.p_link, 1-w_to_GHZ_distilled_state_qc.F_link, w_to_GHZ_distilled_state_qc.emission_direct_statistics,
+        w_to_GHZ_dc_state_qc.p_link, 1-w_to_GHZ_dc_state_qc.F_link, w_to_GHZ_dc_state_qc.emission_direct_statistics,
         pnr_raw_state_qc.p_link, 1-pnr_raw_state_qc.F_link, pnr_raw_state_qc.emission_direct_statistics,
         pnr_dc_state_qc.p_link, 1-pnr_dc_state_qc.F_link, pnr_dc_state_qc.emission_direct_statistics,
         pnr_basic_distilled_state_qc.p_link, 1-pnr_basic_distilled_state_qc.F_link, pnr_basic_distilled_state_qc.emission_direct_statistics,
         pnr_w_distilled_state_qc.p_link, 1-pnr_w_distilled_state_qc.F_link, pnr_w_distilled_state_qc.emission_direct_statistics,
         pnr_bell_sc_distilled_state_qc.p_link, 1-pnr_bell_sc_distilled_state_qc.F_link, pnr_bell_sc_distilled_state_qc.emission_direct_statistics,
-        pnr_bell_dc_distilled_state_qc.p_link, 1-pnr_bell_dc_distilled_state_qc.F_link, pnr_bell_dc_distilled_state_qc.emission_direct_statistics
+        pnr_bell_dc_distilled_state_qc.p_link, 1-pnr_bell_dc_distilled_state_qc.F_link, pnr_bell_dc_distilled_state_qc.emission_direct_statistics,
+        pnr_w_to_GHZ_distilled_state_qc.p_link, 1-pnr_w_to_GHZ_distilled_state_qc.F_link, pnr_w_to_GHZ_distilled_state_qc.emission_direct_statistics,
+        pnr_w_to_GHZ_dc_state_qc.p_link, 1-pnr_w_to_GHZ_dc_state_qc.F_link, pnr_w_to_GHZ_dc_state_qc.emission_direct_statistics
     )
 
 if __name__ == "__main__":
@@ -82,12 +94,16 @@ if __name__ == "__main__":
         w_state_p, w_state_inf, w_state_stats,
         bell_sc_distilled_state_p, bell_sc_distilled_state_inf, bell_sc_distilled_state_stats,
         bell_dc_distilled_state_p, bell_dc_distilled_state_inf, bell_dc_distilled_state_stats,
+        w_to_GHZ_distilled_state_p, w_to_GHZ_distilled_state_inf, w_to_GHZ_distilled_state_stats,
+        w_to_GHZ_dc_state_p, w_to_GHZ_dc_state_inf, w_to_GHZ_dc_state_stats,
         pnr_raw_p, pnr_raw_inf, pnr_raw_stats,
         pnr_dc_state_p, pnr_dc_state_inf, pnr_dc_state_stats,
         pnr_basic_state_p, pnr_basic_state_inf, pnr_basic_state_stats,
         pnr_w_state_p, pnr_w_state_inf, pnr_w_state_stats,
         pnr_bell_sc_distilled_state_p, pnr_bell_sc_distilled_state_inf, pnr_bell_sc_distilled_state_stats,
-        pnr_bell_dc_distilled_state_p, pnr_bell_dc_distilled_state_inf, pnr_bell_dc_distilled_state_stats
+        pnr_bell_dc_distilled_state_p, pnr_bell_dc_distilled_state_inf, pnr_bell_dc_distilled_state_stats,
+        pnr_w_to_GHZ_distilled_state_p, pnr_w_to_GHZ_distilled_state_inf, pnr_w_to_GHZ_distilled_state_stats,
+        pnr_w_to_GHZ_dc_state_p, pnr_w_to_GHZ_dc_state_inf, pnr_w_to_GHZ_dc_state_stats
     ) = map(list, zip(*results))
 
     arr = lambda x: np.array(x)
@@ -110,6 +126,12 @@ if __name__ == "__main__":
     bell_dc_distilled_state_inf_filtered = arr(bell_dc_distilled_state_inf)[valid_indices]
     bell_dc_distilled_state_p_filtered = arr(bell_dc_distilled_state_p)[valid_indices]
     bell_dc_distilled_state_stats_filtered = arr(bell_dc_distilled_state_stats)[valid_indices]
+    w_to_GHZ_distilled_state_inf_filtered = arr(w_to_GHZ_distilled_state_inf)[valid_indices]
+    w_to_GHZ_distilled_state_p_filtered = arr(w_to_GHZ_distilled_state_p)[valid_indices]
+    w_to_GHZ_distilled_state_stats_filtered = arr(w_to_GHZ_distilled_state_stats)[valid_indices]
+    w_to_GHZ_dc_state_inf_filtered = arr(w_to_GHZ_dc_state_inf)[valid_indices]
+    w_to_GHZ_dc_state_p_filtered = arr(w_to_GHZ_dc_state_p)[valid_indices]
+    w_to_GHZ_dc_state_stats_filtered = arr(w_to_GHZ_dc_state_stats)[valid_indices]
 
     valid_indices_pnr = (~np.isnan(arr(pnr_raw_inf)) & ~np.isnan(arr(pnr_dc_state_inf)) & ~np.isnan(arr(pnr_basic_state_inf)) &
                          ~np.isnan(arr(pnr_w_state_inf)) & ~np.isnan(arr(pnr_bell_sc_distilled_state_inf)) & ~np.isnan(arr(pnr_bell_dc_distilled_state_inf)))
@@ -132,6 +154,12 @@ if __name__ == "__main__":
     pnr_bell_dc_distilled_state_inf_filtered = arr(pnr_bell_dc_distilled_state_inf)[valid_indices_pnr]
     pnr_bell_dc_distilled_state_p_filtered = arr(pnr_bell_dc_distilled_state_p)[valid_indices_pnr]
     pnr_bell_dc_distilled_state_stats_filtered = arr(pnr_bell_dc_distilled_state_stats)[valid_indices_pnr]
+    pnr_w_to_GHZ_distilled_state_inf_filtered = arr(pnr_w_to_GHZ_distilled_state_inf)[valid_indices_pnr]
+    pnr_w_to_GHZ_distilled_state_p_filtered = arr(pnr_w_to_GHZ_distilled_state_p)[valid_indices_pnr]
+    pnr_w_to_GHZ_distilled_state_stats_filtered = arr(pnr_w_to_GHZ_distilled_state_stats)[valid_indices_pnr]
+    pnr_w_to_GHZ_dc_state_inf_filtered = arr(pnr_w_to_GHZ_dc_state_inf)[valid_indices_pnr]
+    pnr_w_to_GHZ_dc_state_p_filtered = arr(pnr_w_to_GHZ_dc_state_p)[valid_indices_pnr]
+    pnr_w_to_GHZ_dc_state_stats_filtered = arr(pnr_w_to_GHZ_dc_state_stats)[valid_indices_pnr]
 
     results = {
         "alpha_filtered": alpha_filtered.tolist(),
@@ -151,6 +179,11 @@ if __name__ == "__main__":
         "bell_dc_distilled_state_inf_filtered": bell_dc_distilled_state_inf_filtered.tolist(),
         "bell_dc_distilled_state_p_filtered": bell_dc_distilled_state_p_filtered.tolist(),
         "bell_dc_distilled_state_statistics_filtered": bell_dc_distilled_state_stats_filtered.tolist(),
+        "w_to_GHZ_distilled_state_inf_filtered": w_to_GHZ_distilled_state_inf_filtered.tolist(),
+        "w_to_GHZ_distilled_state_p_filtered": w_to_GHZ_distilled_state_p_filtered.tolist(),
+        "w_to_GHZ_distilled_state_statistics_filtered": w_to_GHZ_distilled_state_stats_filtered.tolist(),
+        "w_to_GHZ_dc_state_inf_filtered": w_to_GHZ_dc_state_inf_filtered.tolist(),
+        "w_to_GHZ_dc_state_p_filtered": w_to_GHZ_dc_state_p_filtered.tolist(),
 
         "alpha_filtered_pnr": alpha_filtered_pnr.tolist(),
         "pnr_raw_inf_filtered": pnr_raw_inf_filtered.tolist(),
@@ -170,7 +203,13 @@ if __name__ == "__main__":
         "pnr_bell_sc_distilled_state_statistics_filtered": pnr_bell_sc_distilled_state_stats_filtered.tolist(),
         "pnr_bell_dc_distilled_state_inf_filtered": pnr_bell_dc_distilled_state_inf_filtered.tolist(),
         "pnr_bell_dc_distilled_state_p_filtered": pnr_bell_dc_distilled_state_p_filtered.tolist(),
-        "pnr_bell_dc_distilled_state_statistics_filtered": pnr_bell_dc_distilled_state_stats_filtered.tolist()
+        "pnr_bell_dc_distilled_state_statistics_filtered": pnr_bell_dc_distilled_state_stats_filtered.tolist(),
+        "pnr_w_to_GHZ_distilled_state_inf_filtered": pnr_w_to_GHZ_distilled_state_inf_filtered.tolist(),
+        "pnr_w_to_GHZ_distilled_state_p_filtered": pnr_w_to_GHZ_distilled_state_p_filtered.tolist(),
+        "pnr_w_to_GHZ_distilled_state_statistics_filtered": pnr_w_to_GHZ_distilled_state_stats_filtered.tolist(),
+        "pnr_w_to_GHZ_dc_state_inf_filtered": pnr_w_to_GHZ_dc_state_inf_filtered.tolist(),
+        "pnr_w_to_GHZ_dc_state_p_filtered": pnr_w_to_GHZ_dc_state_p_filtered.tolist(),
+        "pnr_w_to_GHZ_dc_state_statistics_filtered": pnr_w_to_GHZ_dc_state_stats_filtered.tolist()
     }
 
     # Use the last bell_pair_parameters for filename

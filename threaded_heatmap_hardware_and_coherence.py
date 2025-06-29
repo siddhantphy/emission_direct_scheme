@@ -24,7 +24,17 @@ bell_pair_parameters_list = [
     {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.0, "mu": 1, "lambda": 1, "eta": 1, "alpha": alpha}
 ]
 
-protocols = ["Direct Raw", "Direct DC", "Distill Basic", "Distill W", "Distill SC Bell", "Distill DC Bell"]
+# Add the two protocols as in Cell 31 of results.ipynb and threaded_bright_state_parameter_influence.py
+protocols = [
+    "Direct Raw",
+    "Direct DC",
+    "Distill Basic",
+    "Distill W",
+    "Distill SC Bell",
+    "Distill DC Bell",
+    "Distill W to GHZ",
+    "W to GHZ DC"
+]
 
 def simulate_one(params):
     i, j, coh_time, bell_pair_parameters = params
@@ -48,7 +58,9 @@ def simulate_one(params):
             "Distill Basic": 103,
             "Distill W": 104,
             "Distill SC Bell": 102,
-            "Distill DC Bell": 102
+            "Distill DC Bell": 102,
+            "Distill W to GHZ": 107,
+            "W to GHZ DC": 106
         }[protocol]
         qc = QuantumCircuit(
             0, p_g=pg, network_noise_type=network_noise_type, only_GHZ=True, shots_emission_direct=shots,

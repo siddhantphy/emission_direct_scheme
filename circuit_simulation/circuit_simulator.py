@@ -735,7 +735,6 @@ class QuantumCircuit:
                     attempts_raw += 1
                     if np.random.rand() < p_link_raw: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_raw += 1 # Increase the number of attempts for the first link generation
                         total_time += raw_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
@@ -756,7 +755,6 @@ class QuantumCircuit:
                     attempts_bell_1 += 1
                     if np.random.rand() < p_link_bell: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_bell_1 += 1 # Increase the number of attempts for the first link generation
                 
                 attempts_bell_2 = 0 # Number of attempts to create the link
                 successes = 0 # Number of successful attempts to create the link, we require one successful event
@@ -764,7 +762,6 @@ class QuantumCircuit:
                     attempts_bell_2 += 1
                     if np.random.rand() < p_link_bell: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_bell_2 += 1 # Increase the number of attempts for the first link generation
                 
                 attempts_bell = attempts_bell_1 if attempts_bell_1 > attempts_bell_2 else attempts_bell_2 # Take the maximum number of attempts for the two links
 
@@ -1074,7 +1071,6 @@ class QuantumCircuit:
                     attempts_raw_1 += 1
                     if np.random.rand() < p_link_raw_1: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_raw_1 += 1 # Increase the number of attempts for the first link generation
                         total_time += raw_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
@@ -1095,8 +1091,6 @@ class QuantumCircuit:
                     attempts_raw_2 += 1
                     if np.random.rand() < p_link_raw_2: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_raw_2 += 1 # Increase the number of attempts for the first link generation
-                        total_time += raw_t_link # Time for the successful link generation 
 
                 time_mem += attempts_raw_2 * raw_t_link # Time for the successful link generation
                 total_time += attempts_raw_2 * raw_t_link # Total time for the successful link generation added
@@ -1473,7 +1467,6 @@ class QuantumCircuit:
                     attempts_raw += 1
                     if np.random.rand() < p_link_raw: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_raw += 1 # Increase the number of attempts for the first link generation
                         total_time += raw_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
@@ -1494,8 +1487,6 @@ class QuantumCircuit:
                     attempts_w += 1
                     if np.random.rand() < p_link_w: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_w += 1 # Increase the number of attempts for the first link generation
-                        total_time += w_t_link # Time for the successful link generation 
 
                 time_mem += attempts_w * w_t_link # Time for the successful link generation
                 total_time += attempts_w * w_t_link # Total time for the successful link generation added
@@ -2445,7 +2436,6 @@ class QuantumCircuit:
                     attempts_w_1 += 1
                     if np.random.rand() < p_link_w_1: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_w_1 += 1 # Increase the number of attempts for the first link generation
                         total_time += w_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
@@ -2466,8 +2456,6 @@ class QuantumCircuit:
                     attempts_w_2 += 1
                     if np.random.rand() < p_link_w_2: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_w_2 += 1 # Increase the number of attempts for the first link generation
-                        total_time += w_t_link # Time for the successful link generation
 
                 time_mem += attempts_w_2 * w_t_link # Time for the successful link generation
                 total_time += attempts_w_2 * w_t_link # Total time for the successful link generation added
@@ -2546,6 +2534,9 @@ class QuantumCircuit:
                     # Partial trace over qubits_2 (qubits 4 to 7)
                     rho_emitters_w_to_GHZ_distilled = partial_trace_numpy(post_selected_matrix, [4,5,6,7], dims=[2] * 8)  # Measured qubits traced out
                     rho_emitters_w_to_GHZ_distilled = rho_emitters_w_to_GHZ_distilled/np.trace(rho_emitters_w_to_GHZ_distilled)  # Normalize the density matrix
+                    
+                    # Ensure Hermicity of `rho_emitters_w_to_GHZ_distilled` after numerical instability, in case
+                    rho_emitters_w_to_GHZ_distilled = (rho_emitters_w_to_GHZ_distilled + rho_emitters_w_to_GHZ_distilled.conj().T) / 2
                     
                     # Apply the final noisy SWAP operation
                     qubits_1 = [cirq.LineQubit(i) for i in range(4)]

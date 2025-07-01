@@ -1750,7 +1750,7 @@ class QuantumCircuit:
                     pd_channel_during_link + gad_channel_during_link+ cnots+ depolarizing_noise + pd_channel_after_CNOTs_m +
                     gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c +
                     measurement_noise)
-                
+
                 # Add measurements on communication qubits
                 for i in range(2):
                     circuit.append(cirq.measure(qubits_2[i], key=f'm{i}'))
@@ -1787,7 +1787,7 @@ class QuantumCircuit:
                     circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
                     rho_bell_distilled = simulator.simulate(circuit, initial_state=rho_emitters_distilled).final_density_matrix
                     return [rho_bell_distilled, [time_comm, time_mem, total_time]] # Return the distilled density matrix and the time taken for the protocol
-            
+
                 else:
                     return None
 
@@ -1823,7 +1823,7 @@ class QuantumCircuit:
                 # Decoherence after the SWAP gates, before the CNOT gates
                 pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_idle)).on_each(qubits_1[i]) for i in range(2)]
                 gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_idle)).on_each(qubits_1[i]) for i in range(2)]
-                
+
                 # Define iY gate
                 iY = cirq.Y**0.5  # Because iY = exp(iπ/2 Y), which is equivalent to Y**0.5 up to a global phase
                 ciY = cirq.ControlledGate(iY)
@@ -1854,7 +1854,7 @@ class QuantumCircuit:
                     ciYciYs + depolarizing_noise + pd_channel_after_CNOTs_m +
                     gad_channel_after_CNOTs_m + pd_channel_after_CNOTs_c + gad_channel_after_CNOTs_c +
                     measurement_noise)
-                
+
                 # Add measurements on communication qubits
                 for i in range(2):
                     circuit.append(cirq.measure(qubits_2[i], key=f'm{i}'))
@@ -1874,7 +1874,7 @@ class QuantumCircuit:
                     rho_emitters_distilled = partial_trace_numpy(post_selected_matrix, [0,1], dims=[2] * 4)  # Measured qubits traced out
                     rho_emitters_distilled = rho_emitters_distilled/np.trace(rho_emitters_distilled)  # Normalize the density matrix
 
-                    
+
                     # Apply the final noisy SWAP operation
                     qubits_1 = [cirq.LineQubit(i) for i in range(2)]
 
@@ -1891,7 +1891,7 @@ class QuantumCircuit:
                     circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
                     rho_bell_distilled = simulator.simulate(circuit, initial_state=rho_emitters_distilled).final_density_matrix
                     return [rho_bell_distilled, [time_comm, time_mem, total_time]]
-            
+
                 else:
                     return None
 
@@ -2001,7 +2001,7 @@ class QuantumCircuit:
 
                 # Distill ABCD with BD via ZZ
 
-                rho_fusion_protocol_final += distilled_bell_AB # Add the current density matrix to the final density matrix
+                rho_fusion_protocol_final = distilled_bell_AB # Add the current density matrix to the final density matrix
 
                 
                 current_t_link = total_time
@@ -2029,7 +2029,7 @@ class QuantumCircuit:
             print(rf"*** Success rate of the GHZ Fusion ($k=11$) protocol state is {self.p_link}.***")
 
             return rho_fusion_protocol_final
-        
+
 
         if network_noise_type in range(10, 22):
             data = np.load('circuit_simulation/states/non_emission_based_99_fidelity_Bell_states.npy', allow_pickle=True)

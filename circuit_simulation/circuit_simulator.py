@@ -1960,6 +1960,8 @@ class QuantumCircuit:
 
                 # Fuse at C to create ACD
                 simulator = cirq.DensityMatrixSimulator()
+                print(f"Size of the distilled Bell pair AC: {distilled_bell_AC.shape}")
+                print(f"Size of the distilled Bell pair CD: {distilled_bell_CD.shape}")
                 combined_density_matrix = np.kron(distilled_bell_AC, distilled_bell_CD)
                 gate_cx = [cirq.CNOT(cirq.LineQubit(1), cirq.LineQubit(2))]
                 meas_z = [cirq.measure(cirq.LineQubit(2), key=f'm')]

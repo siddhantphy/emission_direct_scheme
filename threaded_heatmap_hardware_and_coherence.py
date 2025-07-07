@@ -14,16 +14,22 @@ pg = 0.001
 
 coh_times = [0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10, 25, 50, 75, 100]
 
-bell_pair_parameters_list = [
-    {"ent_prot": "single_click", "F_prep": 0.999, "p_DE": 0.01, "mu": 0.95, "lambda": 1, "eta": 0.4474, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 0.999, "p_DE": 0.008, "mu": 0.96, "lambda": 1, "eta": 0.62, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 0.999, "p_DE": 0.006, "mu": 0.97, "lambda": 1, "eta": 0.8, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.004, "mu": 0.98, "lambda": 1, "eta": 0.9, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.002, "mu": 0.99, "lambda": 1, "eta": 0.95, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.001, "mu": 0.99, "lambda": 1, "eta": 0.98, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.0, "mu": 1, "lambda": 1, "eta": 0.99, "alpha": alpha},
-    {"ent_prot": "single_click", "F_prep": 1, "p_DE": 0.0, "mu": 1, "lambda": 1, "eta": 1, "alpha": alpha}
-]
+bell_pair_parameters_list = [{"ent_prot":"single_click","F_prep":0.999,"p_DE":0.01,"mu":0.95,"lambda":1,"eta":0.4474,"alpha":alpha}, # FP Emission-based from Modular architectures paper https://arxiv.org/abs/2408.02837 
+                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.96,"lambda":1,"eta":0.5,"alpha":alpha}, # Assuming no photon double excitation error, inline with the assumptions
+                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.97,"lambda":1,"eta":0.6,"alpha":alpha}, # Further improvements thereon
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.98,"lambda":1,"eta":0.7,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9825,"lambda":1,"eta":0.75,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.985,"lambda":1,"eta":0.8,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9875,"lambda":1,"eta":0.85,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.99,"lambda":1,"eta":0.9,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9925,"lambda":1,"eta":0.95,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.995,"lambda":1,"eta":0.96,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9975,"lambda":1,"eta":0.97,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.998,"lambda":1,"eta":0.98,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9985,"lambda":1,"eta":0.985,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.999,"lambda":1,"eta":0.999,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":0.999,"alpha":alpha},
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":1,"alpha":alpha}] # Ideal - noiseless case
 
 # Add the two protocols as in Cell 31 of results.ipynb and threaded_bright_state_parameter_influence.py
 protocols = [

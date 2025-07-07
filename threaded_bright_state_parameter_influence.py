@@ -8,7 +8,7 @@ import json
 timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 # Bright State parameter alpha
-alpha_range = np.arange(0.0250, 0.525, 0.05)
+alpha_range = np.arange(0.0250, 0.525, 0.025)
 
 # Coherence times
 coh_time = 10  # Set-3

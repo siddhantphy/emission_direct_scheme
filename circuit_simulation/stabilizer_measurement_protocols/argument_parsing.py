@@ -333,6 +333,10 @@ def compose_parser():
                                   ' channel with p_g before measurement. "-p_m" will then be disregarded',
                              required=False,
                              action='store_true')
+    circuit_arg.add_argument('--photon_number_resolution',
+                             help='Specify if photon number resolution is used in the measurement.',
+                             required=False,
+                             action='store_true')
     circuit_arg.add_argument('-prb',
                              '--probabilistic',
                              help='Specifies if the processes in the protocol are probabilistic.',

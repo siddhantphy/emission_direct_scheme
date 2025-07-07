@@ -12,8 +12,8 @@ pnr = True
 coh_time = 10
 pg = 0.001
 
-alpha_range = np.arange(0.05, 0.525, 0.125)
-alpha_distill_range = np.arange(0.05, 0.525, 0.125)
+alpha_range = np.arange(0.0250, 0.525, 0.05)
+alpha_distill_range = np.arange(0.0250, 0.525, 0.05)
 
 protocols = [
     ("bell_sc", 102),

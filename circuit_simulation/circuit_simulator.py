@@ -455,7 +455,7 @@ class QuantumCircuit:
                 noisy_density_matrix[14,14] = -1/4*(pg*(2 - 2*alpha + (-2 + pg)*pg*(1 + alpha*(-2 + eta)))*(pg + 2*(-1 + alpha) + pg*alpha*(-2 + eta))*(-1 + eta)*(6 - 2*mu**2)*(-3 + mu**2))/(4*pg**3*(1 + alpha*(-2 + eta))*(alpha - eta)*eta*(-3 + mu**2)**2 + pg**4*(1 + alpha*(-2 + eta))**2*eta**2*(-3 + mu**2)**2 + 8*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) - 8*pg*(-1 + alpha)*(3 + 6*alpha - 9*eta - 2*(1 + 2*alpha - 3*eta)*mu**2 + (-5 + 6*alpha - eta)*mu**4) + 4*pg**2*(-3 + 9*eta*(1 + eta) + alpha*(6 + 9*(-5 + eta)*eta) + alpha**2*(6 - 9*(-2 + eta)*eta) + 2*(1 - 3*eta*(1 + eta) + alpha*(-2 - 3*(-5 + eta)*eta) + alpha**2*(-2 + 3*(-2 + eta)*eta))*mu**2 + (5 + eta + eta**2 + alpha*(-10 + (-5 + eta)*eta) + alpha**2*(6 - (-2 + eta)*eta))*mu**4))
                 noisy_density_matrix[15,0] = (16*(1 - 2*F_prep)**4*(1 - 2*p_DE)**8*(-1 + pg)**4*(-1 + alpha)**2*mu**4)/(4*pg**3*(1 + alpha*(-2 + eta))*(alpha - eta)*eta*(-3 + mu**2)**2 + pg**4*(1 + alpha*(-2 + eta))**2*eta**2*(-3 + mu**2)**2 + 8*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) - 8*pg*(-1 + alpha)*(3 + 6*alpha - 9*eta - 2*(1 + 2*alpha - 3*eta)*mu**2 + (-5 + 6*alpha - eta)*mu**4) + 4*pg**2*(-3 + 9*eta*(1 + eta) + alpha*(6 + 9*(-5 + eta)*eta) + alpha**2*(6 - 9*(-2 + eta)*eta) + 2*(1 - 3*eta*(1 + eta) + alpha*(-2 - 3*(-5 + eta)*eta) + alpha**2*(-2 + 3*(-2 + eta)*eta))*mu**2 + (5 + eta + eta**2 + alpha*(-10 + (-5 + eta)*eta) + alpha**2*(6 - (-2 + eta)*eta))*mu**4))
                 noisy_density_matrix[15,15] = -1/2*((1 + mu**2)*(-4*pg**3*(1 + alpha*(-2 + eta))**2*(-3 + mu**2) + pg**4*(1 + alpha*(-2 + eta))**2*(-3 + mu**2) - 8*(-1 + alpha)**2*(1 + mu**2) + 8*pg*(-1 + alpha)*(-2 + 5*alpha - 3*alpha*eta + (-2 + alpha + alpha*eta)*mu**2) + 4*pg**2*(-5 - mu**2 + alpha*(19 - 9*eta + (-1 + 3*eta)*mu**2 + alpha*(-17 + 3*mu**2 + (-5 + eta)*eta*(-3 + mu**2))))))/(4*pg**3*(1 + alpha*(-2 + eta))*(alpha - eta)*eta*(-3 + mu**2)**2 + pg**4*(1 + alpha*(-2 + eta))**2*eta**2*(-3 + mu**2)**2 + 8*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) - 8*pg*(-1 + alpha)*(3 + 6*alpha - 9*eta - 2*(1 + 2*alpha - 3*eta)*mu**2 + (-5 + 6*alpha - eta)*mu**4) + 4*pg**2*(-3 + 9*eta*(1 + eta) + alpha*(6 + 9*(-5 + eta)*eta) + alpha**2*(6 - 9*(-2 + eta)*eta) + 2*(1 - 3*eta*(1 + eta) + alpha*(-2 - 3*(-5 + eta)*eta) + alpha**2*(-2 + 3*(-2 + eta)*eta))*mu**2 + (5 + eta + eta**2 + alpha*(-10 + (-5 + eta)*eta) + alpha**2*(6 - (-2 + eta)*eta))*mu**4))
-                self.p_link = np.real((-3*alpha**2*eta**4*(-3 + mu**2)*(4*pg**3*(1 + alpha*(-2 + eta))*(alpha - eta)*eta*(-3 + mu**2)**2 + pg**4*(1 + alpha*(-2 + eta))**2*eta**2*(-3 + mu**2)**2 + 8*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) - 8*pg*(-1 + alpha)*(3 + 6*alpha - 9*eta - 2*(1 + 2*alpha - 3*eta)*mu**2 + (-5 + 6*alpha - eta)*mu**4) + 4*pg**2*(-3 + 9*eta*(1 + eta) + alpha*(6 + 9*(-5 + eta)*eta) + alpha**2*(6 - 9*(-2 + eta)*eta) + 2*(1 - 3*eta*(1 + eta) + alpha*(-2 - 3*(-5 + eta)*eta) + alpha**2*(-2 + 3*(-2 + eta)*eta))*mu**2 + (5 + eta + eta**2 + alpha*(-10 + (-5 + eta)*eta) + alpha**2*(6 - (-2 + eta)*eta))*mu**4)))/(64*(3 - mu**2)))
+                self.p_link = np.real((-3*3*alpha**2*eta**4*(-3 + mu**2)*(4*pg**3*(1 + alpha*(-2 + eta))*(alpha - eta)*eta*(-3 + mu**2)**2 + pg**4*(1 + alpha*(-2 + eta))**2*eta**2*(-3 + mu**2)**2 + 8*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) - 8*pg*(-1 + alpha)*(3 + 6*alpha - 9*eta - 2*(1 + 2*alpha - 3*eta)*mu**2 + (-5 + 6*alpha - eta)*mu**4) + 4*pg**2*(-3 + 9*eta*(1 + eta) + alpha*(6 + 9*(-5 + eta)*eta) + alpha**2*(6 - 9*(-2 + eta)*eta) + 2*(1 - 3*eta*(1 + eta) + alpha*(-2 - 3*(-5 + eta)*eta) + alpha**2*(-2 + 3*(-2 + eta)*eta))*mu**2 + (5 + eta + eta**2 + alpha*(-10 + (-5 + eta)*eta) + alpha**2*(6 - (-2 + eta)*eta))*mu**4)))/(64*(3 - mu**2)))
 
             elif self.photon_number_resolution is False:
                 noisy_density_matrix[0,0] = (-16*(1 + mu**2)*(-256*(-1 + alpha)**2*(1 + mu**2) - 128*pg*(-1 + alpha)*(4*(1 + mu**2) - 2*alpha*(5 + mu**2) + alpha*eta*(3 + mu**2*(-3 + 2*mu))) - 4*pg**3*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + pg**4*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + 4*pg**2*(-32*(5 + mu**2) - 16*alpha*(2*(-19 + mu**2) + eta*(9 - 9*mu**2 + 6*mu**3)) + alpha**2*(-544 + 96*mu**2 + 80*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu))))))/(8192*(-1 + alpha)**2*(3 - 2*mu**2 + 3*mu**4) + 128*pg**2*(96*(-1 + 2*alpha*(1 + alpha)) + 144*(1 + alpha*(-5 + 2*alpha))*eta + 3*(7 - 58*(-1 + alpha)*alpha)*eta**2 + (64 - 128*alpha*(1 + alpha) - 192*(1 + alpha*(-5 + 2*alpha))*eta + (-169 + 94*(-1 + alpha)*alpha)*eta**2)*mu**2 + 24*eta*(4 + 7*eta + 2*alpha**2*(4 + eta) - 2*alpha*(10 + eta))*mu**3 + (32*(5 + 2*alpha*(-5 + 3*alpha)) + 48*(1 + alpha*(-5 + 2*alpha))*eta + 3*(17 - 38*(-1 + alpha)*alpha)*eta**2)*mu**4 + 8*eta*(-4 - 7*eta + 2*alpha*(10 - 11*eta + alpha*(-4 + 11*eta)))*mu**5 + (1 - 94*(-1 + alpha)*alpha)*eta**2*mu**6) - 4096*pg*(-1 + alpha)*(6 - 4*mu**2 - 10*mu**4 + 4*alpha*(3 - 2*mu**2 + 3*mu**4) + eta*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu))) + pg**4*eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu))*(32*(-3 + mu**2) - 32*alpha*(4*(-3 + mu**2) + eta*(3 + mu**2*(-3 + 2*mu))) + alpha**2*(128*(-3 + mu**2) + 64*eta*(3 + mu**2*(-3 + 2*mu)) + eta**2*(-7 + mu**2*(54 + (-56 + mu)*mu)))) + 64*pg**3*eta*(-2*eta*(-3 + mu**2)*(-7 + mu**2*(54 + (-56 + mu)*mu)) + alpha*(-32*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta**2*(3 + mu**2*(-3 + 2*mu))*(-7 + mu**2*(54 + (-56 + mu)*mu)) - 2*eta*(9 + mu**2*(363 + mu*(-408 + mu*(-81 + mu*(72 + 29*mu)))))) + 4*alpha**2*(16*(-3 + mu**2)*(3 + mu**2*(-3 + 2*mu)) + eta*(87 + mu**2*(-47 + mu*(-24 + mu*(57 + mu*(-88 + 47*mu))))))))
@@ -695,8 +695,11 @@ class QuantumCircuit:
             # Print for comparison and fidleity improvement
             print("#################################################")
             print(f"*** GHZ state fidelity of the raw state is {fidelity(raw_state, target_GHZ_state)}.***")
+            print(f"*** GHZ state success rate of the GHZ-state is {p_link_raw}.***")
             print(f"*** Bell state fidelity is {fidelity(bell_pair_state, bell_target)}.***")
-            
+            print(f"*** Bell state success rate of the Bell-state is {p_link_bell}.***")
+            print(f"*** ↓↓↓↓↓↓ Yields ↓↓↓↓↓↓ ***")
+
             # raw_state is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
             rho_emitters_bell_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_bell_distilled_final[:, :] = 0  # Fill the matrix with all zeros
@@ -1036,7 +1039,10 @@ class QuantumCircuit:
             
             print("#################################################")
             print(f"*** GHZ state fidelity of the raw state-1 is {fidelity(raw_state_1, target_GHZ_state)}.***")
+            print(f"*** GHZ state success rate of the GHZ state-1 is {p_link_raw_1}.***")
             print(f"*** GHZ state fidelity of the raw state-2 is {fidelity(raw_state_2, target_GHZ_state)}.***")
+            print(f"*** GHZ state success rate of the GHZ state-2 is {p_link_raw_2}.***")
+            print(f"*** ↓↓↓↓↓↓ Yields ↓↓↓↓↓↓ ***")
 
             rho_emitters_basic_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_basic_distilled_final[:, :] = 0  # Fill the matrix with all zeros
@@ -1428,7 +1434,10 @@ class QuantumCircuit:
 
             print("#################################################")
             print(f"*** GHZ state fidelity of the raw state is {fidelity(raw_state, target_GHZ_state)}.***")
-            print(f"*** GHZ state fidelity of the W-state is {fidelity(w_state, target_w_state)}.***")
+            print(f"*** GHZ state success rate of the GHZ-state is {p_link_raw}.***")
+            print(f"*** W state fidelity of the W-state is {fidelity(w_state, target_w_state)}.***")
+            print(f"*** W state success rate of the W-state is {p_link_w}.***")
+            print(f"*** ↓↓↓↓↓↓ Yields ↓↓↓↓↓↓ ***")
 
             # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because separately considered), but we apply the corresponding gate noise due to this operation.
 
@@ -2399,7 +2408,10 @@ class QuantumCircuit:
             
             print("#################################################")
             print(f"*** W state fidelity of the W state-1 is {fidelity(w_state_1, target_w_state)}.***")
+            print(f"*** W state success rate of the W state-1 is {p_link_w_1}.***")
             print(f"*** W state fidelity of the W state-2 is {fidelity(w_state_2, target_w_state)}.***")
+            print(f"*** W state success rate of the W state-2 is {p_link_w_2}.***")
+            print(f"*** ↓↓↓↓↓↓ Yields ↓↓↓↓↓↓ ***")
 
             rho_emitters_w_to_GHZ_distilled_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters
             rho_emitters_w_to_GHZ_distilled_final[:, :] = 0  # Fill the matrix with all zeros

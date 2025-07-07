@@ -1960,13 +1960,12 @@ class QuantumCircuit:
 
                 # Fuse at C to create ACD
                 simulator = cirq.DensityMatrixSimulator()
-                print(f"Size of the distilled Bell pair AC: {distilled_bell_AC.shape}")
-                print(f"Size of the distilled Bell pair CD: {distilled_bell_CD.shape}")
                 combined_density_matrix = np.kron(distilled_bell_AC, distilled_bell_CD)
-                gate_cx = [cirq.CNOT(cirq.LineQubit(1), cirq.LineQubit(2))]
+                all_qubits = [cirq.LineQubit(i) for i in range(4)]
+                gate_cx = [cirq.CNOT(cirq.LineQubit(3), cirq.LineQubit(2))]
                 meas_z = [cirq.measure(cirq.LineQubit(2), key=f'm')]
                 circuit = cirq.Circuit(gate_cx + meas_z)
-                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix, qubit_order=all_qubits)
                 final_density_matrix = result.final_density_matrix
                 post_selected_matrix = final_density_matrix
                 p_fuse = np.trace(post_selected_matrix)
@@ -1991,10 +1990,11 @@ class QuantumCircuit:
                 # Fuse at A to create ABCD
                 simulator = cirq.DensityMatrixSimulator()
                 combined_density_matrix = np.kron(rho_fusion_ACD, distilled_bell_AB)
-                gate_cx = [cirq.CNOT(cirq.LineQubit(0), cirq.LineQubit(3))]
-                meas_z = [cirq.measure(cirq.LineQubit(4), key=f'm')]
+                all_qubits = [cirq.LineQubit(i) for i in range(5)]
+                gate_cx = [cirq.CNOT(cirq.LineQubit(3), cirq.LineQubit(0))]
+                meas_z = [cirq.measure(cirq.LineQubit(0), key=f'm')]
                 circuit = cirq.Circuit(gate_cx + meas_z)
-                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix, qubit_order=all_qubits)
                 final_density_matrix = result.final_density_matrix
                 post_selected_matrix = final_density_matrix
                 p_fuse = np.trace(post_selected_matrix)
@@ -2007,10 +2007,11 @@ class QuantumCircuit:
                 # Distill ABCD with BD via ZZ
                 simulator = cirq.DensityMatrixSimulator()
                 combined_density_matrix = np.kron(rho_fusion_ABCD, bell_BD)
+                all_qubits = [cirq.LineQubit(i) for i in range(6)]
                 gate_cz = [cirq.CZ(cirq.LineQubit(1), cirq.LineQubit(4)), cirq.CZ(cirq.LineQubit(3), cirq.LineQubit(5))]
                 meas_z = [cirq.measure(cirq.LineQubit(4), cirq.LineQubit(5), key=f'm')]
                 circuit = cirq.Circuit(gate_cz + meas_z)
-                result = simulator.simulate(circuit, initial_state=combined_density_matrix)
+                result = simulator.simulate(circuit, initial_state=combined_density_matrix, qubit_order=all_qubits)
                 final_density_matrix = result.final_density_matrix
                 post_selected_matrix = final_density_matrix
                 p_fuse = np.trace(post_selected_matrix)
@@ -2020,11 +2021,13 @@ class QuantumCircuit:
 
                 rho_fusion_protocol_final = rho_distilled_ABCD # Add the current density matrix to the final density matrix
 
-                
                 current_t_link = total_time
                 t_link += current_t_link # Total time for the link generation
-                current_f_link = fidelity(distilled_bell_AB, density_matrix_target)
+                current_f_link = fidelity(rho_distilled_ABCD, density_matrix_target)
                 f_link += current_f_link # Fidelity average
+                attempts_bell_1 = 1
+                attempts_bell_2 = 1
+                p_distill = 1
                 current_p_link = np.real(1/(attempts_bell_1+attempts_bell_2) * p_distill)
                 p_link += current_p_link
                 successful_shots += 1 # Increase the number of successful shots

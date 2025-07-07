@@ -1900,7 +1900,7 @@ class QuantumCircuit:
             rho_fusion_protocol_final[:, :] = 0  # Fill the matrix with all zeros
             t_link = 0 # Time for the link generation
             f_link = 0 # Fidelity average
-            p_link = 0 # Probability of link generation
+            p_link = 0 # Overall success rate of link generation via this Bell fusion protocol
             successful_shots = 0 # Number of successful shots
 
             if self.only_GHZ is True: # If we only want to model and analyse the GHZ state then we repeat the shots, else we repeat the entire stabilizer protocol
@@ -1910,11 +1910,12 @@ class QuantumCircuit:
             for shot in range(shots):
                 # Protocol success/fail flag
                 protocol_failed = False
-                raw_t_link = 1e-5 # Time for one link generation attempt
+                bell_t_link = 1e-5 # Time for one link generation attempt
                 time_comm = 0 # Time keeping for the communication qubits
                 time_mem = 0 # Time keeping for the memory qubits
                 total_time = 0 # Total time keeping for the entire protocol
-
+                #### TIME LAYER - 1 ####
+                # Create 
                 # Create the pair AB and distill with other AB
                 bell_AB = create_bell_link_and_distill_over_two_nodes([0,0,0])
                 if bell_AB is None:

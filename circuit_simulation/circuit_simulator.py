@@ -317,7 +317,7 @@ class QuantumCircuit:
         
         if network_noise_type == 100:
             # Direct-emission scheme Raw state
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']
@@ -407,7 +407,7 @@ class QuantumCircuit:
         
         if network_noise_type == 101:
             # Double-click protocol for direct emission scheme
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = 1 # Ignore the path length differences for double-click protocol
             p_DE = bell_pair_parameters['p_DE']
@@ -557,7 +557,7 @@ class QuantumCircuit:
 
         if network_noise_type == 102:
             # Bell-pair distillation for direct emission scheme
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']
@@ -890,7 +890,7 @@ class QuantumCircuit:
         if network_noise_type == 103:
             # Basic protocol distillation for direct emission scheme
             # We explicitly code the basic protocol inclusive of decoherence effects to the GHZ state and then use that further in the stabilizer protocol
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']
@@ -1207,7 +1207,7 @@ class QuantumCircuit:
             
         if network_noise_type == 104:
             # W state distillation for direct emission scheme
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']
@@ -1626,7 +1626,7 @@ class QuantumCircuit:
         # k=11 Bell-pair fusion scheme for comparison (k=11 scheme)
         # Figure of this scheme is appened in `results.ipynb`
         if network_noise_type == 105:
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']
@@ -2021,7 +2021,7 @@ class QuantumCircuit:
         
         if network_noise_type == 106:
             # Double-click W state to GHZ state protocol
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = 1 # Ignore the path length differences for double-click protocol
             p_DE = bell_pair_parameters['p_DE']
@@ -2115,7 +2115,7 @@ class QuantumCircuit:
 
         if network_noise_type == 107:
             # W-distill to raw protocol
-            mu = bell_pair_parameters['mu']
+            mu = np.sqrt(bell_pair_parameters['mu']) # Square rooted to match defintion with the previous definition against the numerical values
             F_prep = bell_pair_parameters['F_prep']
             labda = bell_pair_parameters['lambda']
             p_DE = bell_pair_parameters['p_DE']

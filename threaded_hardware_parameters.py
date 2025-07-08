@@ -12,22 +12,25 @@ alpha = 0.05
 pg = 0.001
 shots = 5
 
-bell_pair_parameters_list = [{"ent_prot":"single_click","F_prep":0.999,"p_DE":0.01,"mu":0.95,"lambda":1,"eta":0.4474,"alpha":alpha}, # FP Emission-based from Modular architectures paper https://arxiv.org/abs/2408.02837 
-                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.96,"lambda":1,"eta":0.5,"alpha":alpha}, # Assuming no photon double excitation error, inline with the assumptions
-                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.97,"lambda":1,"eta":0.6,"alpha":alpha}, # Further improvements thereon
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.98,"lambda":1,"eta":0.7,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9825,"lambda":1,"eta":0.75,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.985,"lambda":1,"eta":0.8,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9875,"lambda":1,"eta":0.85,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.99,"lambda":1,"eta":0.9,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9925,"lambda":1,"eta":0.95,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.995,"lambda":1,"eta":0.96,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9975,"lambda":1,"eta":0.97,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.998,"lambda":1,"eta":0.98,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9985,"lambda":1,"eta":0.985,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.999,"lambda":1,"eta":0.999,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":0.999,"alpha":alpha},
-                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":1,"alpha":alpha}] # Ideal - noiseless case
+bell_pair_parameters_list = [{"ent_prot":"single_click","F_prep":0.999,"p_DE":0.01,"mu":0.95,"lambda":1,"eta":0.4474,"alpha":alpha}, # ES-1 FP Emission-based from Modular architectures paper https://arxiv.org/abs/2408.02837 
+                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.95,"lambda":1,"eta":0.4474,"alpha":alpha}, # ES-2 Assuming no photon double excitation error, inline with the assumptions
+                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.96,"lambda":1,"eta":0.5,"alpha":alpha}, # ES-3 Further improvements thereon
+                             {"ent_prot":"single_click","F_prep":0.999,"p_DE":0.0,"mu":0.97,"lambda":1,"eta":0.6,"alpha":alpha}, # ES-4
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.975,"lambda":1,"eta":0.65,"alpha":alpha}, # ES-5
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.98,"lambda":1,"eta":0.7,"alpha":alpha}, # ES-6
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9825,"lambda":1,"eta":0.75,"alpha":alpha}, # ES-7
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.985,"lambda":1,"eta":0.8,"alpha":alpha}, # ES-8
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9875,"lambda":1,"eta":0.85,"alpha":alpha}, # ES-9
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.99,"lambda":1,"eta":0.9,"alpha":alpha}, # ES-10
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9925,"lambda":1,"eta":0.95,"alpha":alpha}, # ES-11
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.995,"lambda":1,"eta":0.96,"alpha":alpha}, # ES-12
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9975,"lambda":1,"eta":0.97,"alpha":alpha}, # ES-13
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.998,"lambda":1,"eta":0.98,"alpha":alpha}, # ES-14
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.9985,"lambda":1,"eta":0.985,"alpha":alpha}, # ES-15
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":0.999,"lambda":1,"eta":0.999,"alpha":alpha}, # ES-16
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":0.999,"alpha":alpha}, # ES-17
+                             {"ent_prot":"single_click","F_prep":1,"p_DE":0.0,"mu":1,"lambda":1,"eta":1,"alpha":alpha}] # ES-18 Ideal - noiseless case
+
 x_positions = list(range(len(bell_pair_parameters_list)))
 
 def simulate_one_hardware_param(idx_and_param):

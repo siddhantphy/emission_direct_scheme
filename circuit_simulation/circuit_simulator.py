@@ -731,7 +731,7 @@ class QuantumCircuit:
                 circuit = cirq.Circuit()
 
                 # Create a Direct Raw state first
-                # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
+                # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered, and repeat until success is considered), but we apply the corresponding gate noise due to this operation.
                 attempts_raw = 0 # Number of attempts to create the link
                 successes = 0 # Number of successful attempts to create the link, we require one successful event
                 while successes < 1:
@@ -1670,20 +1670,21 @@ class QuantumCircuit:
             t_mH = two_qubit_times
 
             # Function to distill over two nodes
-            def create_bell_link_and_distill_over_two_nodes(time_tracking):
+            def create_bell_link_and_distill_over_two_nodes():
                 # These are all local variables of the function
-                time_mem = time_tracking[0] # Time keeping for the memory qubits
-                time_comm = time_tracking[1] # Time keeping for the communication qubits
-                total_time = time_tracking[2] # Total time keeping for the entire protocol
-
+                
+                total_time = 0 # Total time keeping for the entire protocol
+                time_comm = 0 # Time keeping for the communication qubits
+                time_mem = 0 # Time keeping for the memory qubits
+                
                 # First we only model the creating two Bell-pairs and distilling one from another
-                qubits_2 = [cirq.LineQubit(i) for i in range(2)]  # Qubits for W-state, newly generated on the communication qubits
-                qubits_1 = [cirq.LineQubit(i + 2) for i in range(2)]  # Qubits for raw state, sent to the memory qubits, generated before the raw state
+                qubits_2 = [cirq.LineQubit(i) for i in range(2)]  # Qubits for Bell-state, newly generated on the communication qubits
+                qubits_1 = [cirq.LineQubit(i + 2) for i in range(2)]  # Qubits for Bell state, sent to the memory qubits, generated before the raw state
 
                 simulator = cirq.DensityMatrixSimulator()
                 combined_density_matrix = np.kron(double_click_bell_pair, double_click_bell_pair)
 
-                # Create a Direct DC Bell state first
+                # Create a DC Bell state first
                 # bell_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
                 attempts_bell_1 = 0 # Number of attempts to create the link
                 successes = 0 # Number of successful attempts to create the link, we require one successful event
@@ -1691,7 +1692,6 @@ class QuantumCircuit:
                     attempts_bell_1 += 1
                     if np.random.rand() < p_link_dc_bell: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
-                        attempts_bell_1 += 1 # Increase the number of attempts for the first link generation
                         total_time += bell_dc_t_link # Time for the successful link generation 
 
                 # SWAP it to the memory qubits
@@ -1713,7 +1713,6 @@ class QuantumCircuit:
                     if np.random.rand() < p_link_dc_bell: # If the link generation is successful
                         successes += 1 # Increase the number of successful attempts
                         attempts_bell_2 += 1 # Increase the number of attempts for the first link generation
-                        total_time += bell_dc_t_link # Time for the successful link generation 
 
                 time_mem += attempts_bell_2 * bell_dc_t_link # Time for the successful link generation
                 total_time += attempts_bell_2 * bell_dc_t_link # Total time for the successful link generation added
@@ -1766,8 +1765,8 @@ class QuantumCircuit:
                     # Normalize the post-selected matrix
                     post_selected_matrix /= p_distill
 
-                    # Partial trace over qubits_2 (qubits 4 to 7)
-                    rho_emitters_distilled = partial_trace_numpy(post_selected_matrix, [2,3], dims=[2] * 4)  # Measured qubits traced out
+                    # Partial trace over qubits_2 (qubits 2 and 3)
+                    rho_emitters_distilled = partial_trace_numpy(post_selected_matrix, [2,3], dims=[2] * 4)  # Measured qubits traced out, last two qubits retained
                     rho_emitters_distilled = rho_emitters_distilled/np.trace(rho_emitters_distilled)  # Normalize the density matrix
 
                     
@@ -1786,18 +1785,19 @@ class QuantumCircuit:
 
                     circuit = cirq.Circuit(noise_SWAP+pd_channel_after_SWAP_c+gad_channel_after_SWAP_c)
                     rho_bell_distilled = simulator.simulate(circuit, initial_state=rho_emitters_distilled).final_density_matrix
-                    return [rho_bell_distilled, [time_comm, time_mem, total_time]] # Return the distilled density matrix and the time taken for the protocol
+                    total_attempts_subcircuit = attempts_bell_1 + attempts_bell_2
+                    return [rho_bell_distilled, total_attempts_subcircuit, [total_time, time_comm, time_mem]] # Return the distilled density matrix and the time taken for the protocol
             
                 else:
                     return None
                 
-            def distill_with_CiYiY(base_state,time_tracking):
+            def distill_with_CiYiY(base_state, base_state_time_mem):
                 # Module to perform the distillation with the CiYiY gates as required in this fusion-distillation protocol
                 # These are all local variables of the function below
                 # These are all local variables of the function
-                time_mem = time_tracking[0] # Time keeping for the memory qubits
-                time_comm = time_tracking[1] # Time keeping for the communication qubits
-                total_time = time_tracking[2] # Total time keeping for the entire protocol
+                total_time = 0 # Total time keeping for the entire protocol
+                time_comm = 0 # Time keeping for the communication qubits
+                time_mem = base_state_time_mem # Time keeping for the memory qubits, note that the base state is assumed to be on the memory qubits, which is accounted by the SWAP operations and their noise, beacuse this base maybe coming from an earlier time independent of the trigger of the current sub-circuit
 
                 qubits_2 = [cirq.LineQubit(i) for i in range(2)]  # Qubits for W-state, newly generated on the communication qubits
                 qubits_1 = [cirq.LineQubit(i + 2) for i in range(2)]  # Qubits for raw state, sent to the memory qubits, generated before the raw state
@@ -1805,7 +1805,7 @@ class QuantumCircuit:
 
                 combined_density_matrix = np.kron(base_state, double_click_bell_pair)
                 # Create a Direct DC Bell state first
-                # bell_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
+                # base_state is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
                 attempts_bell = 0 # Number of attempts to create the link
                 successes = 0
                 # Number of successful attempts to create the link, we require one successful event
@@ -1813,11 +1813,13 @@ class QuantumCircuit:
                     attempts_bell += 1
                     if np.random.rand() < p_link_dc_bell:
                         successes += 1
-                        attempts_bell += 1
-                        total_time += bell_dc_t_link
+                
+                total_time = attempts_bell * bell_dc_t_link
+                
                 # SWAP it to the memory qubits
                 time_mem += 3*t_CX # Time for the SWAP operation
                 total_time += 3*t_CX
+                
                 # Gate noise on the raw-2 qubits
                 noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(2)]
                 # Decoherence after the SWAP gates, before the CNOT gates
@@ -1910,108 +1912,91 @@ class QuantumCircuit:
             for shot in range(shots):
                 # Protocol success/fail flag
                 protocol_failed = False
-                bell_t_link = 1e-5 # Time for one link generation attempt
-                time_comm = 0 # Time keeping for the communication qubits
-                time_mem = 0 # Time keeping for the memory qubits
-                total_time = 0 # Total time keeping for the entire protocol
-                #### TIME LAYER - 1 ####
-                # Create 
-                # Create the pair AB and distill with other AB
-                bell_AB = create_bell_link_and_distill_over_two_nodes([0,0,0])
-                if bell_AB is None:
-                    protocol_failed = True
-                    continue
-                bell_AB = bell_AB[0] # Extract the distilled density matrix
-                time_comm += bell_AB[1][0] # Time for the communication qubits
-                time_mem += bell_AB[1][1] # Time for the memory qubits
-                total_time += bell_AB[1][2] # Total time for the entire protocol
-
-                # At the same time create the elementary link CD
-                bell_CD = create_bell_link_and_distill_over_two_nodes([0,0,0])
-                if bell_CD is None:
-                    protocol_failed = True
-                    continue
-                bell_CD = bell_CD[0] # Extract the distilled density matrix
-                time_comm += bell_CD[1][0] # Time for the communication qubits
-                time_mem += bell_CD[1][1] # Time for the memory qubits
-                total_time += bell_CD[1][2] # Total time for the entire protocol
-
                 
-                # Then distill AB with another AB
-                distilled_bell_AB = distill_with_CiYiY(bell_AB, [time_mem, time_comm, total_time])
-                if distilled_bell_AB is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_AB = distilled_bell_AB[0]
+                bell_t_link = 1e-5 # Time for one link generation attempt
+                
+                # TIME KEEPING FOR ALL NODES
+                time_dict = {
+                    "total_time": 0,        # Total time keeping for the entire protocol
+                    "time_comm_A": 0,       # Time keeping for the communication qubit
+                    "time_comm_B": 0,
+                    "time_comm_C": 0,
+                    "time_comm_D": 0,
+                    "time_mem_A1": 0,       # Time keeping for the memory qubit
+                    "time_mem_A2": 0,
+                    "time_mem_B1": 0,
+                    "time_mem_B2": 0,
+                    "time_mem_C1": 0,
+                    "time_mem_C2": 0,
+                    "time_mem_D1": 0,
+                    "time_mem_D2": 0
+                }
+                
+                
+                #### TIME LAYER - 1 ####
 
-                # In parallel, distill CD with another CD
-                distilled_bell_CD = distill_with_CiYiY(bell_CD, [time_mem, time_comm, total_time])
-                if distilled_bell_CD is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_CD = distilled_bell_CD[0]
-
-                time_comm += distilled_bell_AB[1][0]
-                time_mem += distilled_bell_AB[1][1]
-                total_time += distilled_bell_AB[1][2]
-
-                # SWAP A and C to memory qubits to create link AC
-
-                bell_AC = create_bell_link_and_distill_over_two_nodes([time_mem, time_comm, total_time])
+                # Create the pair AC and distill with other AC
+                bell_AC = create_bell_link_and_distill_over_two_nodes()
                 if bell_AC is None:
                     protocol_failed = True
                     continue
-                bell_AC = bell_AC[0]
-                time_comm += bell_AC[1][0]
-                time_mem += bell_AC[1][1]
-                total_time += bell_AC[1][2]
-
-                # Apply depolarizing noise for SWAP on qubits of A and C
-
-                # Apply decoherence due to the SWAP gate
-
-                # Then distill AC with another AC
-                distilled_bell_AC = distill_with_CiYiY(bell_AC, [time_mem, time_comm, total_time])
-                if distilled_bell_AC is None:
-                    protocol_failed = True
-                    continue
-                distilled_bell_AC = distilled_bell_AC[0]
-                time_comm += distilled_bell_AC[1][0]
-                time_mem += distilled_bell_AC[1][1]
-                total_time += distilled_bell_AC[1][2]
-
-                # Apply decohrence on AB and CD due to new AC generation
-
-                # Fuse at C to create ACD
-
-                # Fuse at A to create ABCD
-
-                # Create BD with iYiY distillation
-
-                # Distill ABCD with BD via ZZ
-
-                rho_fusion_protocol_final += distilled_bell_AB # Add the current density matrix to the final density matrix
-
+                bell_AC = bell_AC[0] # Extract the distilled density matrix
+                attempts_AC_1 = bell_AC[1] # Extract the total attempts from this sub_circuit to later get the overall success rate of the protocol
                 
-                current_t_link = total_time
-                t_link += current_t_link # Total time for the link generation
-                current_f_link = fidelity(distilled_bell_AB, density_matrix_target)
-                f_link += current_f_link # Fidelity average
-                current_p_link = np.real(1/(attempts_bell_1+attempts_bell_2) * p_distill)
-                p_link += current_p_link
-                successful_shots += 1 # Increase the number of successful shots
+                # Time tracking updation
+                time_dict["total_time"] += bell_AC[-1][0] # Total time for the entire fusion protocol
+                time_dict["time_comm_A"] = bell_AC[-1][1] # Time for the communication qubits (directly assigned as communication qubits get reset within each sub-circuit)
+                time_dict["time_comm_C"] = bell_AC[-1][1] # Time for the communication qubits
+                time_dict["time_mem_A1"] += bell_AC[-1][2] # Time for the memory qubits (added because memory qubits are initialized and kept alive until fully reset once)
+                time_dict["time_mem_C1"] += bell_AC[-1][2] # Time for the memory qubits
+
+                # At the same time create the elementary link BD
+                # Link BD is generated via aslightly different tactic, we create first link BD and use the `distill_with_CiYiY` over it
                 
 
-            if successful_shots != 0:
-                rho_fusion_protocol_final /= successful_shots # Normalize the final density matrix
-                self.t_link = t_link/successful_shots
-                self.F_link = f_link/successful_shots
-                self.p_link = p_link/successful_shots
-            if successful_shots == 0:
-                self.t_link = np.inf
-                self.F_link = 0
-                self.p_link = 0
-                rho_fusion_protocol_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters if the attempts fail!
+                print(bell_AC)
+                import sys
+                sys.exit(1)
+                # Apply decoherence on the one that is finished early
+                
+                # SWAP all qubits to memory in all nodes
+                
+                #### TIME LAYER - 2 ####
+                      
+                # Create and then distill AB with another AB
+
+                # In parallel, distill CD with another CD
+                
+                # Fuse in node B immediately after distillation
+                
+                # In parallel, fuse in node C immediately after distillation
+                
+                # Apply decoherence on the one that is finished early
+                
+                # Distill ABCD with the first created link BD
+
+                # rho_fusion_protocol_final +=  
+
+                
+                # current_t_link = total_time
+                # t_link += current_t_link # Total time for the link generation
+                #  current_f_link = fidelity(distilled_bell_AB, density_matrix_target)
+                # f_link += current_f_link # Fidelity average
+                # # current_p_link = np.real(1/(attempts_bell_1+attempts_bell_2) * p_distill)
+                # p_link += current_p_link
+                # successful_shots += 1 # Increase the number of successful shots
+                
+
+            # if successful_shots != 0:
+            #     rho_fusion_protocol_final /= successful_shots # Normalize the final density matrix
+            #     self.t_link = t_link/successful_shots
+            #     self.F_link = f_link/successful_shots
+            #     self.p_link = p_link/successful_shots
+            # if successful_shots == 0:
+            #     self.t_link = np.inf
+            #     self.F_link = 0
+            #     self.p_link = 0
+            #     rho_fusion_protocol_final = sp.lil_matrix((2**weight, 2**weight), dtype=complex)  # Final density matrix for the emitters if the attempts fail!
 
 
             print(rf"*** GHZ state fidelity of the GHZ Fusion ($k=11$) protocol state is {self.F_link}.***")
@@ -2441,8 +2426,8 @@ class QuantumCircuit:
                 simulator = cirq.DensityMatrixSimulator()
                 combined_density_matrix = np.kron(w_state_2,w_state_1)
 
-                # Create a Direct Raw state first
-                # raw_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
+                # Create a Direct w state first
+                # w_state_1 is created first and undergoes a SWAP operation to the memory (not modeled, because two copies are considered), but we apply the corresponding gate noise due to this operation.
                 attempts_w_1 = 0 # Number of attempts to create the link
                 successes = 0 # Number of successful attempts to create the link, we require one successful event
                 while successes < 1:
@@ -2455,14 +2440,14 @@ class QuantumCircuit:
                 time_mem += 3*t_CX # Time for the SWAP operation
                 total_time += 3*t_CX # Total time for the SWAP operation added
 
-                # Gate noise on the raw-2 qubits
+                # Gate noise on the w-2 qubits
                 noise_SWAP = [cirq.DepolarizingChannel(p=pg).on_each(qubits_1[i]) for i in range(4)]
 
                 # Decoherence after the SWAP gates, before the CNOT gates
                 pd_channel_after_SWAP = [cirq.PhaseDampingChannel(1-np.exp(-time_mem/self.T2n_idle)).on_each(qubits_1[i]) for i in range(4)]
                 gad_channel_after_SWAP = [cirq.GeneralizedAmplitudeDampingChannel(0.5, 1-np.exp(-time_mem/self.T1n_idle)).on_each(qubits_1[i]) for i in range(4)]
 
-                #Generate the second Raw state
+                #Generate the second w state
                 attempts_w_2 = 0 # Number of attempts to create the link
                 successes = 0 # Number of successful attempts to create the link, we require one successful event
                 while successes < 1:
